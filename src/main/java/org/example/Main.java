@@ -57,6 +57,10 @@ public class Main {
         return players;
     }
 
+    public Player getCurrentPlayer(){
+        return players.get(0);
+    }
+
     private void addAdventureCards(String type, String name, int value, int count){
         for(int i = 0; i < count; i++){
             adventureDeck.add(new AdventureCard(type, name, value));
@@ -108,6 +112,10 @@ public class Main {
         addEventCards("Plague", 1);
         addEventCards("Queen's Favor", 2);
         addEventCards("Prosperity", 2);
+    }
+
+    public void nextPlayer() {
+
     }
 
 }

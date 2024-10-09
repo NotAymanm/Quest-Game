@@ -124,4 +124,24 @@ class MainTest {
 
     }
 
+    @Test
+    @DisplayName("Test Player Turn Order")
+    void RESP_04_test_01(){
+
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+
+        assertEquals(1, game.getCurrentPlayer().getId(), "Initial player should be P1");
+        game.nextPlayer();
+        assertEquals(2, game.getCurrentPlayer().getId(), "Next player should be P2");
+        game.nextPlayer();
+        assertEquals(3, game.getCurrentPlayer().getId(), "Next player should be P3");
+        game.nextPlayer();
+        assertEquals(4, game.getCurrentPlayer().getId(), "Next player should be P4");
+        game.nextPlayer();
+        assertEquals(1, game.getCurrentPlayer().getId(), "Next player should be P1 after P4");
+
+    }
+
 }
