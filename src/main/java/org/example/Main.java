@@ -39,7 +39,7 @@ public class Main {
         for(Player player: players){
             for(int i = 0; i < 12; i++){
                 if(!adventureDeck.isEmpty()){
-                    player.takeAdventureCard(adventureDeck.getLast());
+                    player.takeAdventureCard(adventureDeck.removeLast());
                 }
             }
         }

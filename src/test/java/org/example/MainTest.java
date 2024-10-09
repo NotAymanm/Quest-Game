@@ -120,7 +120,6 @@ class MainTest {
 
         List<AdventureCard> adventureDeck = game.getAdventureDeck();
 
-        // Additional check: Ensure deck has been reduced by 48 cards
         assertEquals(52, adventureDeck.size(), "The adventure deck should have 52 cards remaining after distribution.");
 
     }
