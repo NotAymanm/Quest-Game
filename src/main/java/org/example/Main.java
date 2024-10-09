@@ -8,6 +8,8 @@ public class Main {
     private List<AdventureCard> adventureDeck = new ArrayList<>();
     private List<EventCard> eventDeck = new ArrayList<>();
 
+    private List<Player> players = new ArrayList<>();
+
     public static void main(String[] args) {
         Main game = new Main();
     }
@@ -20,6 +22,26 @@ public class Main {
         // Setting up event deck
         addQuestCards();
         addEventCards();
+    }
+
+    public void initPlayers(){
+
+    }
+
+    public void distributeAdventureCards(){
+
+    }
+
+    public List<AdventureCard> getAdventureDeck(){
+        return adventureDeck;
+    }
+
+    public List<EventCard> getEventDeck(){
+        return eventDeck;
+    }
+
+    public List<Player> getPlayers(){
+        return players;
     }
 
     private void addAdventureCards(String type, String name, int value, int count){
@@ -67,14 +89,6 @@ public class Main {
         addEventCards("Plague", 1);
         addEventCards("Queen's Favor", 2);
         addEventCards("Prosperity", 2);
-    }
-
-    public List<AdventureCard> getAdventureDeck(){
-        return adventureDeck;
-    }
-
-    public List<EventCard> getEventDeck(){
-            return eventDeck;
     }
 
 }

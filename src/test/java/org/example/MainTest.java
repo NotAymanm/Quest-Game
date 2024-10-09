@@ -77,4 +77,36 @@ class MainTest {
 
     }
 
+    @Test
+    @DisplayName("Tests Player Initialization")
+    void RESP_02_test_01(){
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+
+        List<Player> players = game.getPlayers();
+
+        assertEquals(4, players.size(), "There should be 4 Players");
+
+    }
+
+    @Test
+    @DisplayName("Tests Distribution of Adventure Cards")
+    void RESP_02_test_02(){
+
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+        game.distributeAdventureCards();
+
+        List<Player> players = game.getPlayers();
+
+        assertEquals(4, players.size(), "There should be 4 Players");
+
+        for(Player player: players){
+            assertEquals(12, player.getHandSize(), "Player " + player.getId() + " should have 12 adventure cards.");
+        }
+
+    }
+
 }
