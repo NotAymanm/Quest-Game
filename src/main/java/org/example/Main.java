@@ -126,6 +126,12 @@ public class Main {
 
     public List<Player> checkForWinners(){
         List<Player> winners = new ArrayList<>();
+        for(Player player: players){
+            if(player.getShields() >= 7){
+                winners.add(player);
+            }
+        }
+
         return winners;
     }
 
