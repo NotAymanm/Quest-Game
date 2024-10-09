@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.StringWriter;
+import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -215,6 +217,57 @@ class MainTest {
         List<Player> winners = game.checkForWinners();
         assertTrue(winners.isEmpty(), "There should be no winners if no one has 7 shields");
 
+    }
+
+    @Test
+    @DisplayName("Tests Game Displays Winner and Terminates")
+    void RESP_06_test01(){
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+        Player p1 = game.getPlayer(0);
+        p1.addShields(7);
+
+        StringWriter output = new StringWriter();
+
+        game.displayWinners(new PrintWriter(output));
+
+        assertTrue(output.toString().contains("Winner: P1"), "The winner ID P1 should be displayed");
+
+        assertTrue(game.isGameOver(), "The game should be over after displaying the winners");
+    }
+
+    @Test
+    @DisplayName("Tests Game Displays Multiple Winners and Terminates")
+    void RESP_06_test02(){
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+        Player p1 = game.getPlayer(0);
+        Player p2 = game.getPlayer(1);
+        p1.addShields(7);
+        p2.addShields(7);
+
+        StringWriter output = new StringWriter();
+        game.displayWinners(new PrintWriter(output));
+
+        assertTrue(output.toString().contains("Winner: P1"), "The winner ID P1 should be displayed");
+        assertTrue(output.toString().contains("Winner: P2"), "The winner ID P2 should be displayed");
+
+        assertTrue(game.isGameOver(), "The game should be over after displaying the winners");
+    }
+
+    @Test
+    @DisplayName("Tests Game Does not Terminate if No Winner")
+    void RESP_06_test03(){
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+        StringWriter output = new StringWriter();
+        game.displayWinners(new PrintWriter(output));
+
+        assertFalse(game.isGameOver(), "The game should not be over if no player has won");
+        assertEquals("", output.toString().trim(), "No output should be displayed if there are no winners");
     }
 
 }

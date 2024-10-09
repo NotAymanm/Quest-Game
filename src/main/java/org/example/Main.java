@@ -1,5 +1,6 @@
 package org.example;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -133,6 +134,14 @@ public class Main {
         }
 
         return winners;
+    }
+
+    public void displayWinners(PrintWriter output){
+
+    }
+
+    public boolean isGameOver(){
+        return false;
     }
 
 }
