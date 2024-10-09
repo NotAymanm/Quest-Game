@@ -20,7 +20,11 @@ public class Player {
         return hand.size();
     }
 
+    public void takeAdventureCard(AdventureCard card){
+        hand.add(card);
+    }
+
     public String toString(){
-        return "Player" + id;
+        return "Player " + id;
     }
 }

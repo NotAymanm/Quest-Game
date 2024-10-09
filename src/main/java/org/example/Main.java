@@ -3,6 +3,8 @@ package org.example;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Collections;
+
 public class Main {
 
     private List<AdventureCard> adventureDeck = new ArrayList<>();
@@ -12,6 +14,9 @@ public class Main {
 
     public static void main(String[] args) {
         Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+        game.distributeAdventureCards();
     }
 
     public void setUpDecks(){
@@ -22,14 +27,22 @@ public class Main {
         // Setting up event deck
         addQuestCards();
         addEventCards();
+
+        Collections.shuffle(adventureDeck);
     }
 
     public void initPlayers(){
-
+        addPlayers(4);
     }
 
     public void distributeAdventureCards(){
-
+        for(Player player: players){
+            for(int i = 0; i < 12; i++){
+                if(!adventureDeck.isEmpty()){
+                    player.takeAdventureCard(adventureDeck.getLast());
+                }
+            }
+        }
     }
 
     public List<AdventureCard> getAdventureDeck(){
@@ -53,6 +66,12 @@ public class Main {
     private void addEventCards(String name, int count){
         for(int i=0; i < count; i++){
             eventDeck.add(new EventCard(name));
+        }
+    }
+
+    private void addPlayers(int count) {
+        for(int i=0; i < count; i++){
+            players.add(new Player(i+1));
         }
     }
 

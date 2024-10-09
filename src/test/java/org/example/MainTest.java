@@ -101,7 +101,7 @@ class MainTest {
 
         List<Player> players = game.getPlayers();
 
-        assertEquals(4, players.size(), "There should be 4 Players");
+        assertEquals(4, players.size(), "Players not initialized");
 
         for(Player player: players){
             assertEquals(12, player.getHandSize(), "Player " + player.getId() + " should have 12 adventure cards.");
