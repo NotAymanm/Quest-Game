@@ -24,6 +24,9 @@ public class Player {
         hand.add(card);
     }
 
+    public void addShields(int num){
+    }
+
     public String toString(){
         return "Player " + id;
     }

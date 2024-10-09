@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 class MainTest {
 
@@ -104,13 +106,13 @@ class MainTest {
         assertEquals(4, players.size(), "Players not initialized");
 
         for(Player player: players){
-            assertEquals(12, player.getHandSize(), "Player " + player.getId() + " should have 12 adventure cards.");
+            assertEquals(12, player.getHandSize(), "P" + player.getId() + " should have 12 adventure cards.");
         }
 
     }
 
     @Test
-    @DisplayName("Tests for adventure deck update")
+    @DisplayName("Tests For Adventure Deck Update")
     void RESP_03_test_01(){
 
         Main game = new Main();
@@ -125,7 +127,7 @@ class MainTest {
     }
 
     @Test
-    @DisplayName("Test Player Turn Order")
+    @DisplayName("Tests Player Turn Order")
     void RESP_04_test_01(){
 
         Main game = new Main();
@@ -141,6 +143,77 @@ class MainTest {
         assertEquals(4, game.getCurrentPlayer().getId(), "Next player should be P4");
         game.nextPlayer();
         assertEquals(1, game.getCurrentPlayer().getId(), "Next player should be P1 after P4");
+
+    }
+
+    @Test
+    @DisplayName("Tests No Winners Initially")
+    void RESP_05_test_01(){
+
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+
+        List<Player> winners = game.checkForWinners();
+
+        assertTrue(winners.isEmpty(), "There should be no winners at the start of the game");
+    }
+
+    @Test
+    @DisplayName("Tests Single Winner")
+    void RESP_05_test_02(){
+
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+
+        Player p1 = game.getPlayer(0);
+        p1.addShields(7);
+
+        List<Player> winners = game.checkForWinners();
+        assertEquals(1, winners.size(), "There should be exactly 1 winner");
+        assertEquals(1, winners.get(0).getId(), "P1 should be the winner");
+    }
+
+    @Test
+    @DisplayName("Tests Multiple Winners")
+    void RESP_05_test_03(){
+
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+
+        Player p1 = game.getPlayer(0);
+        Player p2 = game.getPlayer(1);
+        p1.addShields(7);
+        p2.addShields(8);
+
+        List<Player> winners = game.checkForWinners();
+        assertEquals(2, winners.size(), "There should be exactly 2 winners");
+
+        Set<Integer> winnersIds = new HashSet<>();
+        for(Player player: winners){
+            winnersIds.add(player.getId());
+        }
+
+        assertTrue(winnersIds.contains(1), "P1 should be a winner");
+        assertTrue(winnersIds.contains(2), "P2 should be a winner");
+
+    }
+
+    @Test
+    @DisplayName("Tests No Winners if Less Than 7 Shields")
+    void RESP_05_test_04(){
+
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+
+        Player p1 = game.getPlayer(0);
+        p1.addShields(6);
+
+        List<Player> winners = game.checkForWinners();
+        assertTrue(winners.isEmpty(), "There should be no winners if no one has 7 shields");
 
     }
 

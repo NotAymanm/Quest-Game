@@ -63,6 +63,10 @@ public class Main {
         return players.get(currentPlayerIndex);
     }
 
+    public Player getPlayer(int index){
+        return players.get(index);
+    }
+
     private void addAdventureCards(String type, String name, int value, int count){
         for(int i = 0; i < count; i++){
             adventureDeck.add(new AdventureCard(type, name, value));
@@ -118,6 +122,11 @@ public class Main {
 
     public void nextPlayer() {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+    }
+
+    public List<Player> checkForWinners(){
+        List<Player> winners = new ArrayList<>();
+        return winners;
     }
 
 }
