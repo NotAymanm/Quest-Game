@@ -11,4 +11,8 @@ public class EventCard {
         return name;
     }
 
+    public String toString(){
+        return name;
+    }
+
 }
