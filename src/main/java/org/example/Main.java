@@ -12,6 +12,8 @@ public class Main {
 
     private List<Player> players = new ArrayList<>();
 
+    private int currentPlayerIndex = 0;
+
     public static void main(String[] args) {
         Main game = new Main();
         game.setUpDecks();
@@ -58,7 +60,7 @@ public class Main {
     }
 
     public Player getCurrentPlayer(){
-        return players.get(0);
+        return players.get(currentPlayerIndex);
     }
 
     private void addAdventureCards(String type, String name, int value, int count){
@@ -115,7 +117,7 @@ public class Main {
     }
 
     public void nextPlayer() {
-
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
     }
 
 }
