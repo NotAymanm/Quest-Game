@@ -109,4 +109,20 @@ class MainTest {
 
     }
 
+    @Test
+    @DisplayName("Tests for adventure deck update")
+    void RESP_03_test_01(){
+
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+        game.distributeAdventureCards();
+
+        List<AdventureCard> adventureDeck = game.getAdventureDeck();
+
+        // Additional check: Ensure deck has been reduced by 48 cards
+        assertEquals(52, adventureDeck.size(), "The adventure deck should have 52 cards remaining after distribution.");
+
+    }
+
 }
