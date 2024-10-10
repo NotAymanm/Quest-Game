@@ -181,6 +181,12 @@ public class Main {
         }
     }
 
+    public void displayHotseat(PrintWriter output){
+    }
+
+    public void clearHotseat(PrintWriter output){
+    }
+
     public boolean isGameOver(){
         return gameOver;
     }
@@ -205,6 +211,9 @@ public class Main {
                 player.takeAdventureCards(2, adventureDeck, adventureDiscardPile);
             }
         }
+    }
+
+    public void endTurn(PrintWriter output){
     }
 
     //For testing

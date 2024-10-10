@@ -422,4 +422,38 @@ class MainTest {
         assertEquals(12, p3.getHandSize(), "P1 should have 12 cards after drawing 2 cards");
         assertEquals(11, p4.getHandSize(), "P4 should have 11 cards after drawing 2 cards");
     }
+
+    @Test
+    @DisplayName("Tests hotseat display is cleared")
+    void RESP_12_test_01(){
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+
+        assertEquals(1, game.getCurrentPlayer().getId(), "P1 should be in the hotseat at the start.");
+
+        //check hotsteat is being displayed (p1 is in the hotsteat, p1's cards)
+        StringWriter output = new StringWriter();
+        game.displayHotseat(new PrintWriter(output));
+        assertTrue(output.toString().contains("Current Player in Hotseat: P1"), "The current hotseat should be displayed");
+
+        //Check hotsteat display is cleared (15 new lines)
+        game.clearHotseat(new PrintWriter(output));
+        assertTrue(output.toString().contains("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"), "The hosteat display should be cleared");
+    }
+
+    @Test
+    @DisplayName("Tests current player's turn has ended")
+    void RESP_12_test_02(){
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+
+        StringWriter output = new StringWriter();
+        game.endTurn(new PrintWriter(output));
+
+        assertTrue(output.toString().contains("P1's turn has concluded."), "P1's turn should have concluded.");
+        assertEquals(2, game.getCurrentPlayer().getId(), "P2 should be in the hotseat after P1's turn ended");
+
+    }
 }
