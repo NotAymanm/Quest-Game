@@ -389,4 +389,37 @@ class MainTest {
         game.processEvent();
         assertEquals(12, currentPlayer.getHandSize(), "Player should still have 12 cards, with excess discarded");
     }
+
+    @Test
+    @DisplayName("Tests the effect of the Prosperity card")
+    void RESP_11_test_01(){
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+
+        Player p1 = game.getPlayer(0);
+        Player p2 = game.getPlayer(1);
+        Player p3 = game.getPlayer(2);
+        Player p4 = game.getPlayer(3);
+
+        EventCard currentEvent = new EventCard("Prosperity", "Event");
+        game.setCurrentEvent(currentEvent);
+
+        p1.takeAdventureCards(10, game.getAdventureDeck(), game.getAdventureDiscardPile());
+        p2.takeAdventureCards(12, game.getAdventureDeck(), game.getAdventureDiscardPile());
+        p3.takeAdventureCards(11, game.getAdventureDeck(), game.getAdventureDiscardPile());
+        p4.takeAdventureCards(9, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        assertEquals(10, p1.getHandSize(), "P1 should start with 10 adventure cards");
+        assertEquals(12, p2.getHandSize(), "P2 should start with 12 adventure cards");
+        assertEquals(11, p3.getHandSize(), "P3 should start with 11 adventure cards");
+        assertEquals(9, p4.getHandSize(), "P4 should start with 9 adventure cards");
+
+        game.processEvent();
+
+        assertEquals(12, p1.getHandSize(), "P1 should have 12 cards after drawing 2 cards");
+        assertEquals(12, p2.getHandSize(), "P1 should still have 12 cards after drawing 2 cards");
+        assertEquals(12, p3.getHandSize(), "P1 should have 12 cards after drawing 2 cards");
+        assertEquals(11, p4.getHandSize(), "P4 should have 11 cards after drawing 2 cards");
+    }
 }
