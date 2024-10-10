@@ -95,7 +95,7 @@ public class Main {
     }
 
     public void setCurrentEvent(EventCard card){
-
+        currentEvent = card;
     }
 
     private void addAdventureCards(String type, String name, int value, int count){
@@ -181,7 +181,7 @@ public class Main {
     }
 
     public boolean isQuest(){
-        return false;
+        return currentEvent.getType().equals("Quest");
     }
 
 }

@@ -4,7 +4,7 @@ public class EventCard {
     private String name;
     private String type;
 
-    public EventCard(String name, String Type){
+    public EventCard(String name, String type){
         this.name = name;
         this.type = type;
     }
@@ -14,7 +14,7 @@ public class EventCard {
     }
 
     public String getType(){
-        return "";
+        return type;
     }
 
     public String toString(){
