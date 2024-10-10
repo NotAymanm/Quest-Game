@@ -547,4 +547,58 @@ class MainTest {
         assertTrue(output.toString().contains("Which card you like to discard"), "Game should prompt players to discard a card");
 
     }
+
+    @Test
+    @DisplayName("Tests player enters invalid position")
+    void RESP_16_test_01(){
+        Main game = new Main();
+        game.initPlayers();
+
+        Player currentPlayer = game.getCurrentPlayer();
+
+        game.addAdventureCards("Weapon", "H10", 10, 5);
+        game.addAdventureCards("Weapon", "S10", 10, 5);
+        game.addAdventureCards("Foe", "F15", 15, 3);
+        game.addAdventureCards("Foe", "F10", 10, 1);
+        game.addAdventureCards("Foe", "F5", 5, 1);
+
+        assertEquals(15, game.getAdventureDeck().size(), "Adventure Deck should have 15 cards");
+
+        currentPlayer.takeAdventureCards(15, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        String input = "15";
+        StringWriter output = new StringWriter();
+        game.promptPlayerToDelete(currentPlayer, new Scanner(input), new PrintWriter(output));
+
+        assertTrue(output.toString().contains("Please Enter a Valid Position!"), "Position should be invalid");
+
+    }
+
+    @Test
+    @DisplayName("Tests player enters valid position")
+    void RESP_16_test_02(){
+        Main game = new Main();
+        game.initPlayers();
+
+        Player currentPlayer = game.getCurrentPlayer();
+
+        game.addAdventureCards("Weapon", "H10", 10, 5);
+        game.addAdventureCards("Weapon", "S10", 10, 5);
+        game.addAdventureCards("Foe", "F15", 15, 3);
+        game.addAdventureCards("Foe", "F10", 10, 1);
+        game.addAdventureCards("Foe", "F5", 5, 1);
+
+        assertEquals(15, game.getAdventureDeck().size(), "Adventure Deck should have 15 cards");
+
+        currentPlayer.takeAdventureCards(15, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        String input = "14";
+        StringWriter output = new StringWriter();
+        game.promptPlayerToDelete(currentPlayer, new Scanner(input), new PrintWriter(output));
+
+        assertTrue(output.toString().contains("H10 has been removed."), "Position should be valid");
+
+        assertEquals(14, currentPlayer.getHandSize(), "Player should have 14 cards after discarding 1 card");
+
+    }
 }
