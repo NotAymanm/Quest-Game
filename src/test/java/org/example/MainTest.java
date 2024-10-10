@@ -293,4 +293,30 @@ class MainTest {
         assertEquals(16, game.getEventDeck().size(), "Event deck size should decrease after drawing a card");
     }
 
+    @Test
+    @DisplayName("Tests Correct Identification of Quest Card")
+    void RESP_08_test_01(){
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+
+        EventCard currentEvent = new EventCard("Q3", "Quest");
+        game.setCurrentEvent(currentEvent);
+
+        assertTrue(game.isQuest(), "The drawn card should be a Quest card.");
+    }
+
+    @Test
+    @DisplayName("Tests Correct Identification of Event Card")
+    void RESP_08_test_02(){
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+
+        EventCard currentEvent = new EventCard("Plague", "Event");
+        game.setCurrentEvent(currentEvent);
+
+        assertFalse(game.isQuest(), "The drawn card should be a Event card.");
+    }
+
 }

@@ -94,15 +94,19 @@ public class Main {
         return players.get(index);
     }
 
+    public void setCurrentEvent(EventCard card){
+
+    }
+
     private void addAdventureCards(String type, String name, int value, int count){
         for(int i = 0; i < count; i++){
             adventureDeck.add(new AdventureCard(type, name, value));
         }
     }
 
-    private void addEventCards(String name, int count){
+    private void addEventCards(String name, String type, int count){
         for(int i=0; i < count; i++){
-            eventDeck.add(new EventCard(name));
+            eventDeck.add(new EventCard(name, type));
         }
     }
 
@@ -135,16 +139,16 @@ public class Main {
     }
 
     private void addQuestCards(){
-        addEventCards("Q2", 3);
-        addEventCards("Q3", 4);
-        addEventCards("Q4", 3);
-        addEventCards("Q5", 2);
+        addEventCards("Q2", "Quest", 3);
+        addEventCards("Q3", "Quest", 4);
+        addEventCards("Q4", "Quest", 3);
+        addEventCards("Q5", "Quest", 2);
     }
 
     private void addEventCards(){
-        addEventCards("Plague", 1);
-        addEventCards("Queen's Favor", 2);
-        addEventCards("Prosperity", 2);
+        addEventCards("Plague", "Event", 1);
+        addEventCards("Queen's Favor", "Event", 2);
+        addEventCards("Prosperity", "Event", 2);
     }
 
     public void nextPlayer() {
@@ -174,6 +178,10 @@ public class Main {
 
     public boolean isGameOver(){
         return gameOver;
+    }
+
+    public boolean isQuest(){
+        return false;
     }
 
 }
