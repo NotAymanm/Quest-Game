@@ -34,6 +34,10 @@ public class Player {
         shields += num;
     }
 
+    public void loseShields(int num){
+        shields = Math.max(shields - num, 0);
+    }
+
     public String toString(){
         return "Player " + id;
     }

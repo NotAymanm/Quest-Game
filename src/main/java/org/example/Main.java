@@ -185,7 +185,10 @@ public class Main {
     }
 
     public void processEvent(){
-
+        if(currentEvent.getName().equals("Plague")){
+            Player currentPlayer = getCurrentPlayer();
+            currentPlayer.loseShields(2);
+        }
     }
 
 }
