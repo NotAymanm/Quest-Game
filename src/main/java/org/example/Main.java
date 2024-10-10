@@ -198,6 +198,13 @@ public class Main {
             Player currentPlayer = getCurrentPlayer();
             currentPlayer.takeAdventureCards(2, adventureDeck, adventureDiscardPile);
         }
+        else if(currentEvent.getName().equals("Prosperity")){
+            for(int i = 0; i < players.size(); i++){
+                //takes cards in order of current player
+                Player player = getPlayer((currentPlayerIndex + i) % players.size());
+                player.takeAdventureCards(2, adventureDeck, adventureDiscardPile);
+            }
+        }
     }
 
     //For testing
