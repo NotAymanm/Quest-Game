@@ -45,11 +45,6 @@ public class Player {
                 Collections.shuffle(adventureDeck);
             }
             takeAdventureCard(adventureDeck.removeLast());
-
-            //TODO: Handle more than 12 cards here
-            if(getHandSize() > 12){
-                adventureDiscardPile.add(discardAdventureCard(0));
-            }
         }
     }
 
@@ -80,7 +75,7 @@ public class Player {
     }
 
     public int numCardsToDiscard(){
-        return -1;
+        return Math.max(0, (getHandSize() - 12));
     }
 
     public AdventureCard discardAdventureCard(int index){
