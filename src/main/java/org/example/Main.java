@@ -173,6 +173,9 @@ public class Main {
     }
 
     public void promptPlayerToDelete(Player player, Scanner input, PrintWriter output){
+        output.print("P" + player.getId() + "'s current Hand: ");
+        printList(player.getHand(), output);
+        output.println("Which card you like to discard (Enter Index): ");
     }
 
     public void displayWinners(PrintWriter output){
