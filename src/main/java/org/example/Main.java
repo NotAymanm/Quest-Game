@@ -218,7 +218,11 @@ public class Main {
     }
 
     public void startTurn(PrintWriter output){
-
+        Player currentPlayer = getCurrentPlayer();
+        output.println("P" + currentPlayer.getId() + "'s turn has begun."); output.flush();
+        displayHotseat(output);
+        output.print("P" + currentPlayer.getId() + "'s current Hand: ");
+        printList(currentPlayer.getHand(), output);
     }
 
     public void endTurn(PrintWriter output){
@@ -229,16 +233,15 @@ public class Main {
         nextPlayer();
     }
 
-    //For testing
-    public void printList(List<?> myList){
-        System.out.print("[");
+    public void printList(List<?> myList, PrintWriter output){
+        output.print("["); output.flush();
         for(int i = 0; i < myList.size(); i++){
-            System.out.print(myList.get(i));
+            output.print(myList.get(i)); output.flush();
             if(i < myList.size() -1){
-                System.out.print(", ");
+                output.print(", "); output.flush();
             }
         }
-        System.out.println("]");
+        output.println("]"); output.flush();
     }
 
 }

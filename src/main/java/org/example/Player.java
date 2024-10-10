@@ -2,6 +2,7 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Player {
@@ -19,6 +20,10 @@ public class Player {
         return id;
     }
 
+    public List<AdventureCard> getHand(){
+        return hand;
+    }
+
     public int getHandSize(){
         return hand.size();
     }
@@ -29,6 +34,7 @@ public class Player {
 
     public void takeAdventureCard(AdventureCard card){
         hand.add(card);
+        sortHand();
     }
 
     public void takeAdventureCards(int count, List<AdventureCard> adventureDeck, List<AdventureCard> adventureDiscardPile){
@@ -45,6 +51,32 @@ public class Player {
                 adventureDiscardPile.add(discardAdventureCard(0));
             }
         }
+    }
+
+    private void sortHand(){
+        Collections.sort(hand, new Comparator<AdventureCard>() {
+            @Override
+            public int compare(AdventureCard card1, AdventureCard card2) {
+                if(card1.getType().equals("Foe") && card2.getType().equals("Weapon")){
+                    return -1;
+                }
+                else if(card1.getType().equals("Weapon") && card2.getType().equals("Foe")){
+                    return 1;
+                }
+                else if(card1.getType().equals(card2.getType())){
+                    if(card1.getType().equals("Weapon")){
+                        if(card1.getName().charAt(0) == 'S' && card2.getName().charAt(0) =='H'){
+                            return -1;
+                        }
+                        else if(card1.getName().charAt(0) == 'H' && card2.getName().charAt(0) == 'S'){
+                            return 1;
+                        }
+                    }
+                    return Integer.compare(card1.getValue(), card2.getValue());
+                }
+                return 0;
+            }
+        });
     }
 
     public AdventureCard discardAdventureCard(int index){

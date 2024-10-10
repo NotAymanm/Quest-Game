@@ -12,8 +12,16 @@ public class AdventureCard {
         this.value = value;
     }
 
+    public String getType(){
+        return type;
+    }
+
     public String getName(){
         return name;
+    }
+
+    public int getValue(){
+        return value;
     }
 
     public String toString(){
