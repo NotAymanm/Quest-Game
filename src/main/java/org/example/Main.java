@@ -182,9 +182,13 @@ public class Main {
     }
 
     public void displayHotseat(PrintWriter output){
+        output.println("Current Player in Hotseat: P" + getCurrentPlayer().getId()); output.flush();
     }
 
     public void clearHotseat(PrintWriter output){
+        for(int i = 0; i < 15; i++){
+            output.print("\n"); output.flush();
+        }
     }
 
     public boolean isGameOver(){
@@ -214,6 +218,11 @@ public class Main {
     }
 
     public void endTurn(PrintWriter output){
+        clearHotseat(output);
+        Player currentPlayer = getCurrentPlayer();
+        output.println("P"+ currentPlayer.getId() + "'s turn has concluded."); output.flush();
+
+        nextPlayer();
     }
 
     //For testing
