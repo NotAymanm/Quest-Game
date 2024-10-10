@@ -362,7 +362,7 @@ class MainTest {
         game.initPlayers();
 
         Player currentPlayer = game.getCurrentPlayer();
-        game.drawAdventureCards(9);
+        currentPlayer.takeAdventureCards(9, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         EventCard currentEvent = new EventCard("Queen's Favor", "Event");
         game.setCurrentEvent(currentEvent);
@@ -380,7 +380,7 @@ class MainTest {
         game.initPlayers();
 
         Player currentPlayer = game.getCurrentPlayer();
-        game.drawAdventureCards(12);
+        currentPlayer.takeAdventureCards(12, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         EventCard currentEvent = new EventCard("Queen's Favor", "Event");
         game.setCurrentEvent(currentEvent);

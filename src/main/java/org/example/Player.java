@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Player {
@@ -28,6 +29,26 @@ public class Player {
 
     public void takeAdventureCard(AdventureCard card){
         hand.add(card);
+    }
+
+    public void takeAdventureCards(int count, List<AdventureCard> adventureDeck, List<AdventureCard> adventureDiscardPile){
+        for(int i = 0; i < count; i++){
+            if(adventureDeck.isEmpty()){
+                adventureDeck.addAll(adventureDiscardPile);
+                adventureDiscardPile.clear();
+                Collections.shuffle(adventureDeck);
+            }
+            takeAdventureCard(adventureDeck.removeLast());
+
+            //TODO: Handle more than 12 cards here
+            if(getHandSize() > 12){
+                adventureDiscardPile.add(discardAdventureCard(0));
+            }
+        }
+    }
+
+    public AdventureCard discardAdventureCard(int index){
+        return hand.remove(index);
     }
 
     public void addShields(int num){

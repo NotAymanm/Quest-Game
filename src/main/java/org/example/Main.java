@@ -11,6 +11,7 @@ public class Main {
     private List<AdventureCard> adventureDeck = new ArrayList<>();
     private List<EventCard> eventDeck = new ArrayList<>();
 
+    private List<AdventureCard> adventureDiscardPile = new ArrayList<>();
     private List<EventCard> eventDiscardPile = new ArrayList<>();
 
     private List<Player> players = new ArrayList<>();
@@ -61,10 +62,6 @@ public class Main {
         }
     }
 
-    public void drawAdventureCards(int count){
-
-    }
-
     public void drawNextEventCard(PrintWriter output){
         if(eventDeck.isEmpty()){
             eventDeck.addAll(eventDiscardPile);
@@ -80,6 +77,10 @@ public class Main {
 
     public List<AdventureCard> getAdventureDeck(){
         return adventureDeck;
+    }
+
+    public List<AdventureCard> getAdventureDiscardPile(){
+        return adventureDiscardPile;
     }
 
     public List<EventCard> getEventDeck(){
@@ -193,6 +194,22 @@ public class Main {
             Player currentPlayer = getCurrentPlayer();
             currentPlayer.loseShields(2);
         }
+        else if(currentEvent.getName().equals("Queen's Favor")){
+            Player currentPlayer = getCurrentPlayer();
+            currentPlayer.takeAdventureCards(2, adventureDeck, adventureDiscardPile);
+        }
+    }
+
+    //For testing
+    public void printList(List<?> myList){
+        System.out.print("[");
+        for(int i = 0; i < myList.size(); i++){
+            System.out.print(myList.get(i));
+            if(i < myList.size() -1){
+                System.out.print(", ");
+            }
+        }
+        System.out.println("]");
     }
 
 }
