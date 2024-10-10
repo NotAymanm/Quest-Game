@@ -221,7 +221,7 @@ class MainTest {
 
     @Test
     @DisplayName("Tests Game Displays Winner and Terminates")
-    void RESP_06_test01(){
+    void RESP_06_test_01(){
         Main game = new Main();
         game.setUpDecks();
         game.initPlayers();
@@ -239,7 +239,7 @@ class MainTest {
 
     @Test
     @DisplayName("Tests Game Displays Multiple Winners and Terminates")
-    void RESP_06_test02(){
+    void RESP_06_test_02(){
         Main game = new Main();
         game.setUpDecks();
         game.initPlayers();
@@ -259,7 +259,7 @@ class MainTest {
 
     @Test
     @DisplayName("Tests Game Does not Terminate if No Winner")
-    void RESP_06_test03(){
+    void RESP_06_test_03(){
         Main game = new Main();
         game.setUpDecks();
         game.initPlayers();
@@ -268,6 +268,29 @@ class MainTest {
 
         assertFalse(game.isGameOver(), "The game should not be over if no player has won");
         assertEquals("", output.toString().trim(), "No output should be displayed if there are no winners");
+    }
+
+    @Test
+    @DisplayName("Tests Drawing and Displaying Next Event Card")
+    void RESP_07_test_01(){
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+
+        StringWriter output = new StringWriter();
+
+        game.drawNextEventCard(new PrintWriter(output));
+
+        String eventCard = output.toString().trim();
+
+        boolean displayedEventCard = eventCard.contains("Q")
+                || eventCard.contains("Plague")
+                || eventCard.contains("Queen's Favor")
+                || eventCard.contains("Prosperity");
+
+        assertTrue(displayedEventCard, "The drawn event card should be displayed");
+
+        assertEquals(16, game.getEventDeck().size(), "Event deck size should decrease after drawing a card");
     }
 
 }

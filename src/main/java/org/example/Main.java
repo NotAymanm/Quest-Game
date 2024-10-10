@@ -54,6 +54,10 @@ public class Main {
         }
     }
 
+    public void drawNextEventCard(PrintWriter output){
+
+    }
+
     public List<AdventureCard> getAdventureDeck(){
         return adventureDeck;
     }
