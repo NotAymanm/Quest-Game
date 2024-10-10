@@ -485,5 +485,45 @@ class MainTest {
         assertTrue(isDisplayed, "Current Player's cards should be displayed and in correct order");
     }
 
+    @Test
+    @DisplayName("Tests no Discard Needed at limit")
+    void RESP_14_test_01(){
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
 
+        Player currentPlayer = game.getCurrentPlayer();
+        currentPlayer.takeAdventureCards(12, game.getAdventureDeck(), game.getAdventureDiscardPile());
+        int cardsToDiscard = currentPlayer.numCardsToDiscard();
+
+        assertEquals(0, cardsToDiscard, "Player should not have to discard any cards");
+    }
+
+    @Test
+    @DisplayName("Tests discard excess cards")
+    void RESP_14_test_02(){
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+
+        Player currentPlayer = game.getCurrentPlayer();
+        currentPlayer.takeAdventureCards(15, game.getAdventureDeck(), game.getAdventureDiscardPile());
+        int cardsToDiscard = currentPlayer.numCardsToDiscard();
+
+        assertEquals(3, cardsToDiscard, "Player should discard 3 cards to have exactly 12");
+    }
+
+    @Test
+    @DisplayName("Tests no discard under limit")
+    void RESP_14_test_03(){
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+
+        Player currentPlayer = game.getCurrentPlayer();
+        currentPlayer.takeAdventureCards(10, game.getAdventureDeck(), game.getAdventureDiscardPile());
+        int cardsToDiscard = currentPlayer.numCardsToDiscard();
+
+        assertEquals(0, cardsToDiscard, "Player should not discard if under the limit");
+    }
 }

@@ -79,6 +79,10 @@ public class Player {
         });
     }
 
+    public int numCardsToDiscard(){
+        return -1;
+    }
+
     public AdventureCard discardAdventureCard(int index){
         return hand.remove(index);
     }
