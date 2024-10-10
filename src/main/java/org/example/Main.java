@@ -14,12 +14,18 @@ public class Main {
     private List<Player> players = new ArrayList<>();
 
     private int currentPlayerIndex = 0;
+    private boolean gameOver = false;
 
     public static void main(String[] args) {
         Main game = new Main();
         game.setUpDecks();
         game.initPlayers();
         game.distributeAdventureCards();
+
+        PrintWriter output = new PrintWriter(System.out);
+
+        game.displayWinners(output);
+
     }
 
     public void setUpDecks(){
@@ -137,11 +143,17 @@ public class Main {
     }
 
     public void displayWinners(PrintWriter output){
-
+        List<Player> winners = checkForWinners();
+        if(!winners.isEmpty()){
+            for(Player winner: winners){
+                output.println("Winner: P" + winner.getId()); output.flush();
+            }
+            gameOver = true;
+        }
     }
 
     public boolean isGameOver(){
-        return false;
+        return gameOver;
     }
 
 }
