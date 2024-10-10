@@ -354,4 +354,39 @@ class MainTest {
         assertEquals(0, currentPlayer.getShields(), "The player's shields should not go below 0.");
     }
 
+    @Test
+    @DisplayName("Tests the effect of the Queen’s favor card")
+    void RESP_10_test_01() {
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+
+        Player currentPlayer = game.getCurrentPlayer();
+        game.drawAdventureCards(9);
+
+        EventCard currentEvent = new EventCard("Queen's Favor", "Event");
+        game.setCurrentEvent(currentEvent);
+
+        assertEquals(9, currentPlayer.getHandSize(), "Player should start with 9 adventure cards");
+        game.processEvent();
+        assertEquals(11, currentPlayer.getHandSize(), "Player should have exactly 11 cards after drawing 2 adventure cards");
+    }
+
+    @Test
+    @DisplayName("Tests that Queen’s favor does not exceed 12 cards")
+    void RESP_10_test_02() {
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+
+        Player currentPlayer = game.getCurrentPlayer();
+        game.drawAdventureCards(12);
+
+        EventCard currentEvent = new EventCard("Queen's Favor", "Event");
+        game.setCurrentEvent(currentEvent);
+
+        assertEquals(12, currentPlayer.getHandSize() ,"Player should start with 12 adventure cards");
+        game.processEvent();
+        assertEquals(12, currentPlayer.getHandSize(), "Player should still have 12 cards, with excess discarded");
+    }
 }

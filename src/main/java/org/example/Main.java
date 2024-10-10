@@ -61,6 +61,10 @@ public class Main {
         }
     }
 
+    public void drawAdventureCards(int count){
+
+    }
+
     public void drawNextEventCard(PrintWriter output){
         if(eventDeck.isEmpty()){
             eventDeck.addAll(eventDiscardPile);
