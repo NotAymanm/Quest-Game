@@ -601,4 +601,30 @@ class MainTest {
         assertEquals(14, currentPlayer.getHandSize(), "Player should have 14 cards after discarding 1 card");
 
     }
+
+    @Test
+    @DisplayName("Tests game displays updated hand after discard")
+    void RESP_17_test_01(){
+        Main game = new Main();
+        game.initPlayers();
+
+        Player currentPlayer = game.getCurrentPlayer();
+
+        game.addAdventureCards("Weapon", "H10", 10, 5);
+        game.addAdventureCards("Weapon", "S10", 10, 5);
+        game.addAdventureCards("Foe", "F15", 15, 3);
+        game.addAdventureCards("Foe", "F10", 10, 1);
+        game.addAdventureCards("Foe", "F5", 5, 1);
+
+        assertEquals(15, game.getAdventureDeck().size(), "Adventure Deck should have 15 cards");
+
+        currentPlayer.takeAdventureCards(15, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        String input = "14";
+        StringWriter output = new StringWriter();
+        game.promptPlayerToDelete(currentPlayer, new Scanner(input), new PrintWriter(output));
+
+        assertTrue(output.toString().contains("[F5, F10, F15, F15, F15, S10, S10, S10, S10, S10, H10, H10, H10, H10]"), "Should display updated hand after discard.");
+
+    }
 }
