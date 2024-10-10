@@ -173,9 +173,20 @@ public class Main {
     }
 
     public void promptPlayerToDelete(Player player, Scanner input, PrintWriter output){
-        output.print("P" + player.getId() + "'s current Hand: ");
+        output.println("P" + player.getId() + "'s current Hand: "); output.flush();
         printList(player.getHand(), output);
-        output.println("Which card you like to discard (Enter Index): ");
+        output.println("Which card you like to discard (Enter Index): "); output.flush();
+
+        String indexInput = input.next();
+        int index = Integer.parseInt(indexInput);
+
+        if(index >= 0 && index < player.getHandSize()){
+            AdventureCard card = player.getHand().remove(index);
+            output.println(card.getName() + " has been removed."); output.flush();
+        }
+        else{
+            output.println("Please Enter a Valid Position!"); output.flush();
+        }
     }
 
     public void displayWinners(PrintWriter output){
