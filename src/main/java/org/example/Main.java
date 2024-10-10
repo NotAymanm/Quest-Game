@@ -11,9 +11,13 @@ public class Main {
     private List<AdventureCard> adventureDeck = new ArrayList<>();
     private List<EventCard> eventDeck = new ArrayList<>();
 
+    private List<EventCard> eventDiscardPile = new ArrayList<>();
+
     private List<Player> players = new ArrayList<>();
 
     private int currentPlayerIndex = 0;
+    private EventCard currentEvent = null;
+
     private boolean gameOver = false;
 
     public static void main(String[] args) {
@@ -25,6 +29,8 @@ public class Main {
         PrintWriter output = new PrintWriter(System.out);
 
         game.displayWinners(output);
+
+        game.drawNextEventCard(output);
 
     }
 
@@ -38,6 +44,7 @@ public class Main {
         addEventCards();
 
         Collections.shuffle(adventureDeck);
+        Collections.shuffle(eventDeck);
     }
 
     public void initPlayers(){
@@ -55,7 +62,16 @@ public class Main {
     }
 
     public void drawNextEventCard(PrintWriter output){
+        if(eventDeck.isEmpty()){
+            eventDeck.addAll(eventDiscardPile);
+            eventDiscardPile.clear();
+            Collections.shuffle(eventDeck);
+        }
 
+        currentEvent = eventDeck.removeLast();
+        eventDiscardPile.add(currentEvent);
+
+        output.println("Event Card Drawn: " + currentEvent); output.flush();
     }
 
     public List<AdventureCard> getAdventureDeck(){
