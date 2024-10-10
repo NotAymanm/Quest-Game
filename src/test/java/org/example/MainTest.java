@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -456,4 +457,33 @@ class MainTest {
         assertEquals(2, game.getCurrentPlayer().getId(), "P2 should be in the hotseat after P1's turn ended");
 
     }
+
+    @Test
+    @DisplayName("Tests that the current player's turn is indicated and hand is displayed")
+    void RESP_13_test_01(){
+        Main game = new Main();
+        game.initPlayers();
+
+        game.nextPlayer();
+        assertEquals(2, game.getCurrentPlayer().getId(), "P2 should be in the hotseat.");
+
+        Player currentPlayer = game.getCurrentPlayer();
+
+        game.addAdventureCards("Weapon", "H10", 10, 2);
+        game.addAdventureCards("Foe", "F10", 10, 1);
+        game.addAdventureCards("Weapon", "B15", 15, 1);
+        game.addAdventureCards("Foe", "F5", 5, 1);
+
+        currentPlayer.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        StringWriter output = new StringWriter();
+        game.startTurn(new PrintWriter(output));
+        assertTrue(output.toString().contains("P2's turn has begun."), "P2's turn should be indicated.");
+
+        boolean isDisplayed = output.toString().contains("[F5, F10, H10, H10, B15]");
+
+        assertTrue(isDisplayed, "Current Player's cards should be displayed and in correct order");
+    }
+
+
 }

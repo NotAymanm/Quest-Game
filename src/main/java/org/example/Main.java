@@ -103,7 +103,7 @@ public class Main {
         currentEvent = card;
     }
 
-    private void addAdventureCards(String type, String name, int value, int count){
+    public void addAdventureCards(String type, String name, int value, int count){
         for(int i = 0; i < count; i++){
             adventureDeck.add(new AdventureCard(type, name, value));
         }
@@ -215,6 +215,10 @@ public class Main {
                 player.takeAdventureCards(2, adventureDeck, adventureDiscardPile);
             }
         }
+    }
+
+    public void startTurn(PrintWriter output){
+
     }
 
     public void endTurn(PrintWriter output){
