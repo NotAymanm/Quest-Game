@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Collections;
+import java.util.Scanner;
 
 public class Main {
 
@@ -169,6 +170,9 @@ public class Main {
         }
 
         return winners;
+    }
+
+    public void promptPlayerToDelete(Player player, Scanner input, PrintWriter output){
     }
 
     public void displayWinners(PrintWriter output){

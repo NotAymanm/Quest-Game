@@ -7,10 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.StringWriter;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 class MainTest {
 
@@ -525,5 +522,29 @@ class MainTest {
         int cardsToDiscard = currentPlayer.numCardsToDiscard();
 
         assertEquals(0, cardsToDiscard, "Player should not discard if under the limit");
+    }
+
+    @Test
+    @DisplayName("Tests game displays player's cards and prompts player for the card(s) to delete")
+    void RESP_15_test_01(){
+        Main game = new Main();
+        game.initPlayers();
+
+        Player currentPlayer = game.getCurrentPlayer();
+
+        game.addAdventureCards("Weapon", "H10", 10, 2);
+        game.addAdventureCards("Foe", "F10", 10, 1);
+        game.addAdventureCards("Weapon", "B15", 15, 1);
+        game.addAdventureCards("Foe", "F5", 5, 1);
+
+        currentPlayer.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        String input = "1";
+        StringWriter output = new StringWriter();
+        game.promptPlayerToDelete(currentPlayer, new Scanner(input), new PrintWriter(output));
+
+        assertTrue(output.toString().contains("[F5, F10, H10, H10, B15]"), "Player's hand should be displayed");
+        assertTrue(output.toString().contains("Which card you like to discard"), "Game should prompt players to discard a card");
+
     }
 }
