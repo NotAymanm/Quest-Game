@@ -183,6 +183,8 @@ public class Main {
         if(index >= 0 && index < player.getHandSize()){
             AdventureCard card = player.getHand().remove(index);
             output.println(card.getName() + " has been removed."); output.flush();
+            output.println("P" + player.getId() + "'s updated Hand: "); output.flush();
+            printList(player.getHand(), output);
         }
         else{
             output.println("Please Enter a Valid Position!"); output.flush();
