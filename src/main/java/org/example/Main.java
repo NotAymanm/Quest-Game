@@ -184,4 +184,8 @@ public class Main {
         return currentEvent.getType().equals("Quest");
     }
 
+    public void processEvent(){
+
+    }
+
 }

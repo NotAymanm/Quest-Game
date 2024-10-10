@@ -319,4 +319,39 @@ class MainTest {
         assertFalse(game.isQuest(), "The drawn card should be a Event card.");
     }
 
+    @Test
+    @DisplayName("Tests the effect of the Plague card")
+    void RESP_09_test_01(){
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+
+        EventCard currentEvent = new EventCard("Plague", "Event");
+        game.setCurrentEvent(currentEvent);
+
+        Player currentPlayer = game.getCurrentPlayer();
+        currentPlayer.addShields(4);
+        int initialShields = currentPlayer.getShields();
+        game.processEvent();
+        int expectedShields = Math.max(initialShields - 2, 0);
+        assertEquals(expectedShields, currentPlayer.getShields(), "The player should lose 2 shields, but not go below 0.");
+    }
+
+    @Test
+    @DisplayName("Tests that Plague card cannot reduce shields below 0")
+    void RESP_09_test_02(){
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+
+        EventCard currentEvent = new EventCard("Plague", "Event");
+        game.setCurrentEvent(currentEvent);
+
+        Player currentPlayer = game.getCurrentPlayer();
+        currentPlayer.addShields(1);
+        assertEquals(1, currentPlayer.getShields(), "The player should start with 1 shield.");
+        game.processEvent();
+        assertEquals(0, currentPlayer.getShields(), "The player's shields should not go below 0.");
+    }
+
 }
