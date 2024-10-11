@@ -22,6 +22,8 @@ public class Main {
 
     private boolean gameOver = false;
 
+    private Player questSponsor = null;
+
     public static void main(String[] args) {
         Main game = new Main();
         game.setUpDecks();
@@ -196,6 +198,10 @@ public class Main {
         return currentEvent.getType().equals("Quest");
     }
 
+    public boolean isQuestSponsored(){
+        return questSponsor != null;
+    }
+
     public void processEvent(){
         if(currentEvent.getName().equals("Plague")){
             Player currentPlayer = getCurrentPlayer();
@@ -203,13 +209,13 @@ public class Main {
         }
         else if(currentEvent.getName().equals("Queen's Favor")){
             Player currentPlayer = getCurrentPlayer();
-            currentPlayer.takeAdventureCards(2, adventureDeck, adventureDiscardPile);
+            currentPlayer.drawAdventureCards(2, adventureDeck, adventureDiscardPile);
         }
         else if(currentEvent.getName().equals("Prosperity")){
             for(int i = 0; i < players.size(); i++){
                 //takes cards in order of current player
                 Player player = getPlayer((currentPlayerIndex + i) % players.size());
-                player.takeAdventureCards(2, adventureDeck, adventureDiscardPile);
+                player.drawAdventureCards(2, adventureDeck, adventureDiscardPile);
             }
         }
     }
@@ -228,6 +234,9 @@ public class Main {
         output.println("P"+ currentPlayer.getId() + "'s turn has concluded."); output.flush();
 
         nextPlayer();
+    }
+
+    public void findSponsor(Scanner input, PrintWriter output){
     }
 
     public void printList(List<?> myList, PrintWriter output){

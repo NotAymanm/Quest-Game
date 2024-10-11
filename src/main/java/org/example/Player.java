@@ -115,10 +115,6 @@ public class Player {
         return Math.max(0, (getHandSize() - 12));
     }
 
-    public AdventureCard discardAdventureCard(int index){
-        return hand.remove(index);
-    }
-
     public void addShields(int num){
         shields += num;
     }

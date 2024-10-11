@@ -605,5 +605,23 @@ class MainTest {
 
     }
 
+    @Test
+    @DisplayName("Tests game prompting current player to decide to sponsor quest")
+    void RESP_18_test_01(){
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+
+        game.setCurrentEvent(new EventCard("Q4", "Quest"));
+
+        String input = "y";
+        StringWriter output = new StringWriter();
+
+        game.findSponsor(new Scanner(input), new PrintWriter(output));
+
+        assertTrue(output.toString().contains("do you want to sponsor this quest"), "Game should prompt player to decide to sponsor or not");
+
+        assertTrue(game.isQuestSponsored(), "Quest should be sponsored when player selects 'y'");
+    }
 
 }
