@@ -236,11 +236,18 @@ public class Main {
     }
 
     public void endTurn(Scanner input, PrintWriter output){
-        clearHotseat(output);
         Player currentPlayer = getCurrentPlayer();
+        output.println(currentPlayer.toString() + ", Please leave the hotseat by hitting the <return> key..."); output.flush();
+        input.nextLine();
+        clearHotseat(output);
         output.println("P"+ currentPlayer.getId() + "'s turn has concluded."); output.flush();
 
         nextPlayer();
+    }
+
+    public void nextTurn(Scanner input, PrintWriter output){
+        endTurn(input, output);
+        startTurn(output);
     }
 
     public void findSponsor(Scanner input, PrintWriter output){
@@ -257,6 +264,8 @@ public class Main {
         output.println("All players have declined to sponsor the quest."); output.flush();
         currentEvent = null;
         output.println("The quest has been discarded."); output.flush();
+
+        nextTurn(input, output);
     }
 
     public void printList(List<?> myList, PrintWriter output){
