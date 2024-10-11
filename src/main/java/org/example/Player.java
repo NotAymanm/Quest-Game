@@ -48,6 +48,10 @@ public class Player {
         return false;
     }
 
+    public boolean canSponsor(EventCard currentEvent){
+        return true;
+    }
+
     public void takeAdventureCard(AdventureCard card){
         hand.add(card);
         sortHand();

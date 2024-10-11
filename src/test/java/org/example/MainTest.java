@@ -666,4 +666,68 @@ class MainTest {
                 );
     }
 
+    @Test
+    @DisplayName("Tests Player Can Sponsor Quest")
+    void RESP_21_test_01(){
+        Main game = new Main();
+        game.initPlayers();
+
+        game.setCurrentEvent(new EventCard("Q3", "Quest"));
+
+        Player currentPlayer = game.getCurrentPlayer();
+
+        game.addAdventureCards("Foe", "F10", 10, 1);
+        game.addAdventureCards("Foe", "F20", 20, 1);
+        game.addAdventureCards("Foe", "F30", 30, 1);
+        game.addAdventureCards("Weapon", "D5", 5, 1);
+        game.addAdventureCards("Weapon", "S10", 10, 1);
+
+        currentPlayer.drawAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        boolean canSponsor = currentPlayer.canSponsor(game.getCurrentEvent());
+
+        assertTrue(canSponsor, "Player should be able to sponsor a valid 3 stage quest");
+    }
+
+    @Test
+    @DisplayName("Tests player cant sponsor quest with insufficient cards")
+    void RESP_21_test_02(){
+        Main game = new Main();
+        game.initPlayers();
+
+        game.setCurrentEvent(new EventCard("Q3", "Quest"));
+
+        Player currentPlayer = game.getCurrentPlayer();
+
+        game.addAdventureCards("Foe", "F10", 10, 1);
+        game.addAdventureCards("Foe", "F20", 20, 1);
+
+        currentPlayer.drawAdventureCards(2, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        boolean canSponsor = currentPlayer.canSponsor(game.getCurrentEvent());
+
+        assertFalse(canSponsor, "Player should NOT be able to sponsor a quest with insufficient cards");
+    }
+
+    @Test
+    @DisplayName("Tests player cant sponsor quest with invalid stage order")
+    void RESP_21_test_03(){
+        Main game = new Main();
+        game.initPlayers();
+
+        game.setCurrentEvent(new EventCard("Q3", "Quest"));
+
+        Player currentPlayer = game.getCurrentPlayer();
+
+        game.addAdventureCards("Foe", "F10", 10, 1);
+        game.addAdventureCards("Foe", "F10", 10, 1);
+        game.addAdventureCards("Foe", "F20", 20, 1);
+
+        currentPlayer.drawAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        boolean canSponsor = currentPlayer.canSponsor(game.getCurrentEvent());
+
+        assertFalse(canSponsor, "Player should NOT be able to sponsor a quest with decreasing/same stage values");
+    }
+
 }
