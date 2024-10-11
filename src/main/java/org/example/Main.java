@@ -101,6 +101,10 @@ public class Main {
         return players.get(index);
     }
 
+    public EventCard getCurrentEvent(){
+        return currentEvent;
+    }
+
     public void setCurrentEvent(EventCard card){
         currentEvent = card;
     }

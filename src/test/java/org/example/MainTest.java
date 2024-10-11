@@ -624,4 +624,27 @@ class MainTest {
         assertTrue(game.isQuestSponsored(), "Quest should be sponsored when player selects 'y'");
     }
 
+    @Test
+    @DisplayName("Tests game handles all player declining sponsor")
+    void RESP_19_test_01(){
+        Main game = new Main();
+        game.setUpDecks();
+        game.initPlayers();
+
+        game.setCurrentEvent(new EventCard("Q4", "Quest"));
+
+        String input = "\nn\nn\nn\nn";
+        StringWriter output = new StringWriter();
+
+        game.findSponsor(new Scanner(input), new PrintWriter(output));
+
+        assertTrue(output.toString().contains("All players have declined to sponsor the quest."),
+                "The game should declare that all players have declined the quest");
+        assertTrue(output.toString().contains("The quest has been discarded."),
+                "The quest should be discarded when no players sponsor it");
+
+        assertFalse(game.isQuestSponsored(), "The quest should not be sponsored when all players decline");
+        assertNull(game.getCurrentEvent(), "The quest card should be discarded after all players decline to sponsor");
+    }
+
 }
