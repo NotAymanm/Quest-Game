@@ -235,7 +235,7 @@ public class Main {
         printList(currentPlayer.getHand(), output);
     }
 
-    public void endTurn(PrintWriter output){
+    public void endTurn(Scanner input, PrintWriter output){
         clearHotseat(output);
         Player currentPlayer = getCurrentPlayer();
         output.println("P"+ currentPlayer.getId() + "'s turn has concluded."); output.flush();

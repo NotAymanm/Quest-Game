@@ -423,8 +423,9 @@ class MainTest {
         game.setUpDecks();
         game.initPlayers();
 
+        String input = "\n";
         StringWriter output = new StringWriter();
-        game.endTurn(new PrintWriter(output));
+        game.endTurn(new Scanner(input), new PrintWriter(output));
 
         assertTrue(output.toString().contains("P1's turn has concluded."), "P1's turn should have concluded.");
         assertEquals(2, game.getCurrentPlayer().getId(), "P2 should be in the hotseat after P1's turn ended");
@@ -645,6 +646,24 @@ class MainTest {
 
         assertFalse(game.isQuestSponsored(), "The quest should not be sponsored when all players decline");
         assertNull(game.getCurrentEvent(), "The quest card should be discarded after all players decline to sponsor");
+    }
+
+    @Test
+    @DisplayName("Tests game handles all player declining sponsor")
+    void RESP_20_test_01(){
+        Main game = new Main();
+        game.initPlayers();
+
+        Player currentPlayer = game.getCurrentPlayer();
+
+        String input = "\n";
+        StringWriter output = new StringWriter();
+
+        game.endTurn(new Scanner(input) , new PrintWriter(output));
+
+        assertTrue(output.toString().contains(currentPlayer.toString() + ", Please leave the hotseat by hitting the <return> key"),
+                    "The game should prompt the current player to leave the hot seat"
+                );
     }
 
 }
