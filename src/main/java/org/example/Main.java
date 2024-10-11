@@ -55,11 +55,7 @@ public class Main {
 
     public void distributeAdventureCards(){
         for(Player player: players){
-            for(int i = 0; i < 12; i++){
-                if(!adventureDeck.isEmpty()){
-                    player.takeAdventureCard(adventureDeck.removeLast());
-                }
-            }
+            player.drawAdventureCards(12, adventureDeck, adventureDiscardPile);
         }
     }
 
@@ -170,25 +166,6 @@ public class Main {
         }
 
         return winners;
-    }
-
-    public void promptPlayerToDelete(Player player, Scanner input, PrintWriter output){
-        output.println("P" + player.getId() + "'s current Hand: "); output.flush();
-        printList(player.getHand(), output);
-        output.println("Which card you like to discard (Enter Index): "); output.flush();
-
-        String indexInput = input.next();
-        int index = Integer.parseInt(indexInput);
-
-        if(index >= 0 && index < player.getHandSize()){
-            AdventureCard card = player.getHand().remove(index);
-            output.println(card.getName() + " has been removed."); output.flush();
-            output.println("P" + player.getId() + "'s updated Hand: "); output.flush();
-            printList(player.getHand(), output);
-        }
-        else{
-            output.println("Please Enter a Valid Position!"); output.flush();
-        }
     }
 
     public void displayWinners(PrintWriter output){

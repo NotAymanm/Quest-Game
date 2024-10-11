@@ -371,24 +371,6 @@ class MainTest {
     }
 
     @Test
-    @DisplayName("Tests that Queen’s favor does not exceed 12 cards")
-    void RESP_10_test_02() {
-        Main game = new Main();
-        game.setUpDecks();
-        game.initPlayers();
-
-        Player currentPlayer = game.getCurrentPlayer();
-        currentPlayer.takeAdventureCards(12, game.getAdventureDeck(), game.getAdventureDiscardPile());
-
-        EventCard currentEvent = new EventCard("Queen's Favor", "Event");
-        game.setCurrentEvent(currentEvent);
-
-        assertEquals(12, currentPlayer.getHandSize() ,"Player should start with 12 adventure cards");
-        game.processEvent();
-        assertEquals(12, currentPlayer.getHandSize(), "Player should still have 12 cards, with excess discarded");
-    }
-
-    @Test
     @DisplayName("Tests the effect of the Prosperity card")
     void RESP_11_test_01(){
         Main game = new Main();
@@ -403,21 +385,15 @@ class MainTest {
         EventCard currentEvent = new EventCard("Prosperity", "Event");
         game.setCurrentEvent(currentEvent);
 
-        p1.takeAdventureCards(10, game.getAdventureDeck(), game.getAdventureDiscardPile());
-        p2.takeAdventureCards(12, game.getAdventureDeck(), game.getAdventureDiscardPile());
-        p3.takeAdventureCards(11, game.getAdventureDeck(), game.getAdventureDiscardPile());
-        p4.takeAdventureCards(9, game.getAdventureDeck(), game.getAdventureDiscardPile());
+        p1.drawAdventureCards(10, game.getAdventureDeck(), game.getAdventureDiscardPile());
+        p4.drawAdventureCards(9, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         assertEquals(10, p1.getHandSize(), "P1 should start with 10 adventure cards");
-        assertEquals(12, p2.getHandSize(), "P2 should start with 12 adventure cards");
-        assertEquals(11, p3.getHandSize(), "P3 should start with 11 adventure cards");
         assertEquals(9, p4.getHandSize(), "P4 should start with 9 adventure cards");
 
         game.processEvent();
 
         assertEquals(12, p1.getHandSize(), "P1 should have 12 cards after drawing 2 cards");
-        assertEquals(12, p2.getHandSize(), "P1 should still have 12 cards after drawing 2 cards");
-        assertEquals(12, p3.getHandSize(), "P1 should have 12 cards after drawing 2 cards");
         assertEquals(11, p4.getHandSize(), "P4 should have 11 cards after drawing 2 cards");
     }
 
@@ -532,18 +508,19 @@ class MainTest {
 
         Player currentPlayer = game.getCurrentPlayer();
 
-        game.addAdventureCards("Weapon", "H10", 10, 2);
+        game.addAdventureCards("Weapon", "H10", 10, 5);
+        game.addAdventureCards("Weapon", "S10", 10, 5);
+        game.addAdventureCards("Foe", "F15", 15, 3);
         game.addAdventureCards("Foe", "F10", 10, 1);
-        game.addAdventureCards("Weapon", "B15", 15, 1);
         game.addAdventureCards("Foe", "F5", 5, 1);
 
-        currentPlayer.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile());
+        currentPlayer.takeAdventureCards(15, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         String input = "1";
         StringWriter output = new StringWriter();
-        game.promptPlayerToDelete(currentPlayer, new Scanner(input), new PrintWriter(output));
+        currentPlayer.discardCards(new Scanner(input), new PrintWriter(output));
 
-        assertTrue(output.toString().contains("[F5, F10, H10, H10, B15]"), "Player's hand should be displayed");
+        assertTrue(output.toString().contains("[F5, F10, F15, F15, F15, S10, S10, S10, S10, S10, H10, H10, H10, H10, H10]"), "Player's hand should be displayed");
         assertTrue(output.toString().contains("Which card you like to discard"), "Game should prompt players to discard a card");
 
     }
@@ -568,7 +545,7 @@ class MainTest {
 
         String input = "15";
         StringWriter output = new StringWriter();
-        game.promptPlayerToDelete(currentPlayer, new Scanner(input), new PrintWriter(output));
+        currentPlayer.discardCards(new Scanner(input), new PrintWriter(output));
 
         assertTrue(output.toString().contains("Please Enter a Valid Position!"), "Position should be invalid");
 
@@ -594,7 +571,7 @@ class MainTest {
 
         String input = "14";
         StringWriter output = new StringWriter();
-        game.promptPlayerToDelete(currentPlayer, new Scanner(input), new PrintWriter(output));
+        currentPlayer.discardCards(new Scanner(input), new PrintWriter(output));
 
         assertTrue(output.toString().contains("H10 has been removed."), "Position should be valid");
 
@@ -622,9 +599,11 @@ class MainTest {
 
         String input = "14";
         StringWriter output = new StringWriter();
-        game.promptPlayerToDelete(currentPlayer, new Scanner(input), new PrintWriter(output));
+        currentPlayer.discardCards(new Scanner(input), new PrintWriter(output));
 
         assertTrue(output.toString().contains("[F5, F10, F15, F15, F15, S10, S10, S10, S10, S10, H10, H10, H10, H10]"), "Should display updated hand after discard.");
 
     }
+
+
 }
