@@ -252,6 +252,11 @@ public class Main {
             }
             i++;
         }
+        if(questSponsor != null) return;
+
+        output.println("All players have declined to sponsor the quest."); output.flush();
+        currentEvent = null;
+        output.println("The quest has been discarded."); output.flush();
     }
 
     public void printList(List<?> myList, PrintWriter output){
