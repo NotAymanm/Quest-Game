@@ -657,7 +657,7 @@ class MainTest {
     }
 
     @Test
-    @DisplayName("Tests game handles all player declining sponsor")
+    @DisplayName("Tests game asks current player to leave the hotseat")
     void RESP_20_test_01(){
         Main game = new Main();
         game.initPlayers();
@@ -736,6 +736,40 @@ class MainTest {
         boolean canSponsor = currentPlayer.canSponsor(game.getCurrentEvent());
 
         assertFalse(canSponsor, "Player should NOT be able to sponsor a quest with decreasing/same stage values");
+    }
+
+    @Test
+    @DisplayName("Test game displays sponsor's and and prompts next card or 'Quit'")
+    void RESP_22_test_01(){
+        Main game = new Main();
+        game.initPlayers();
+
+        game.setCurrentEvent(new EventCard("Q2", "Quest"));
+
+        Player sponsor = game.getCurrentPlayer();
+        sponsor.setAsSponsor();
+
+        game.addAdventureCards("Weapon", "H10", 10, 2);
+        game.addAdventureCards("Foe", "F10", 10, 1);
+        game.addAdventureCards("Weapon", "B15", 15, 1);
+        game.addAdventureCards("Foe", "F5", 5, 1);
+
+        sponsor .takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        String input = "0\nQuit\n0\nQuit";
+        StringWriter output = new StringWriter();
+
+        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+
+        assertTrue(output.toString().contains("Sponsor's hand (P1): [F5, F10, H10, H10, B15]"),
+                "Sponsor's hand should be displayed correctly");
+
+        assertTrue(output.toString().contains("Which card would you like to use for Stage 1? (Enter Index), or type 'Quit' to stop:"),
+                "The game should prompt the sponsor to select a card or quit");
+
+        assertTrue(output.toString().contains("You selected: F5"), "The game should confirm the selected card");
+        assertTrue(output.toString().contains("Stage 1 building complete."), "The game should confirm when sponsor quits");
+
     }
 
 }

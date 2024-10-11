@@ -32,6 +32,15 @@ public class Player {
         return shields;
     }
 
+    public void setAsSponsor(){
+        isSponsor = true;
+    }
+
+    public void sponsorCard(Scanner input, PrintWriter output, EventCard eventCard){
+
+
+    }
+
     public boolean sponsorQuest(Scanner input, PrintWriter output){
         output.print("P" + id + "'s Cards: "); output.flush();
         printList(hand, output);
