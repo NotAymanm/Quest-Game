@@ -33,6 +33,8 @@ public class Player {
     }
 
     public boolean sponsorQuest(Scanner input, PrintWriter output){
+        output.print("P" + id + "'s Cards: "); output.flush();
+        printList(hand, output);
         output.println("P"+ id +", do you want to sponsor this quest? (y/n):"); output.flush();
         String answer = input.nextLine();
 
@@ -49,6 +51,52 @@ public class Player {
     }
 
     public boolean canSponsor(EventCard currentEvent){
+        if(!currentEvent.getType().equals("Quest")) return false;
+
+        List<AdventureCard> foeCards = new ArrayList<>();
+        List<AdventureCard> weaponCards = new ArrayList<>();
+
+        for(AdventureCard card: hand){
+            if(card.getType().equals("Foe")){
+                foeCards.add(card);
+            }
+            else if(card.getType().equals("Weapon")){
+                weaponCards.add(card);
+            }
+        }
+
+        int numStages = Character.getNumericValue(currentEvent.getName().charAt(1));
+
+        int lastStageValue = 0;
+        for(int i = 0; i < numStages; i++){
+            if(foeCards.isEmpty()) return false;
+
+            int currentStageValue = foeCards.getFirst().getValue();
+            foeCards.removeFirst();
+
+            Set<String> usedWeaponTypes = new HashSet<>();
+
+            while(currentStageValue <= lastStageValue && !weaponCards.isEmpty()){
+                AdventureCard weapon = weaponCards.getFirst();
+                if(!usedWeaponTypes.contains(weapon.getName())){
+                    currentStageValue += weapon.getValue();
+                    usedWeaponTypes.add(weapon.getName());
+                    weaponCards.removeFirst();
+                }
+                else{
+                    weaponCards.removeFirst();
+                }
+            }
+
+            usedWeaponTypes.clear();
+
+            if(currentStageValue <= lastStageValue){
+                return false;
+            }
+
+            lastStageValue = currentStageValue;
+        }
+
         return true;
     }
 

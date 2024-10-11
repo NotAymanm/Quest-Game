@@ -254,8 +254,10 @@ public class Main {
         int i = 0;
         while(questSponsor == null && i != players.size()){
             Player p = getPlayer((currentPlayerIndex + i) % players.size());
-            if(p.sponsorQuest(input, output)){
-                questSponsor = p;
+            if(p.canSponsor(currentEvent)){
+                if(p.sponsorQuest(input, output)){
+                    questSponsor = p;
+                }
             }
             i++;
         }

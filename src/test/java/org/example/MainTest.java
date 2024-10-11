@@ -615,9 +615,17 @@ class MainTest {
 
         game.setCurrentEvent(new EventCard("Q4", "Quest"));
 
+        Player currentPlayer = game.getCurrentPlayer();
+
+        game.addAdventureCards("Foe", "F10", 10, 1);
+        game.addAdventureCards("Foe", "F20", 20, 1);
+        game.addAdventureCards("Foe", "F30", 30, 1);
+        game.addAdventureCards("Foe", "F40", 40, 1);
+
+        currentPlayer.drawAdventureCards(4, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
         String input = "y";
         StringWriter output = new StringWriter();
-
         game.findSponsor(new Scanner(input), new PrintWriter(output));
 
         assertTrue(output.toString().contains("do you want to sponsor this quest"), "Game should prompt player to decide to sponsor or not");
