@@ -30,11 +30,14 @@ public class Main {
         game.initPlayers();
         game.distributeAdventureCards();
 
+        Scanner input = new Scanner(System.in);
         PrintWriter output = new PrintWriter(System.out);
 
         game.displayWinners(output);
 
         game.drawNextEventCard(output);
+
+        game.findSponsor(input, output);
 
     }
 
@@ -237,6 +240,14 @@ public class Main {
     }
 
     public void findSponsor(Scanner input, PrintWriter output){
+        int i = 0;
+        while(questSponsor == null && i != players.size()){
+            Player p = getPlayer((currentPlayerIndex + i) % players.size());
+            if(p.sponsorQuest(input, output)){
+                questSponsor = p;
+            }
+            i++;
+        }
     }
 
     public void printList(List<?> myList, PrintWriter output){

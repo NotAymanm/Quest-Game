@@ -7,11 +7,13 @@ public class Player {
     private int id;
     private List<AdventureCard> hand;
     private int shields;
+    private boolean isSponsor;
 
     public Player(int id){
         this.id = id;
         this.hand = new ArrayList<>();
         this.shields = 0;
+        this.isSponsor = false;
     }
 
     public int getId(){
@@ -28,6 +30,22 @@ public class Player {
 
     public int getShields(){
         return shields;
+    }
+
+    public boolean sponsorQuest(Scanner input, PrintWriter output){
+        output.println("P"+ id +", do you want to sponsor this quest? (y/n):"); output.flush();
+        String answer = input.nextLine();
+
+        if(answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes")){
+            isSponsor = true;
+            return true;
+        }
+        else if(answer.equalsIgnoreCase("n") || answer.equalsIgnoreCase("no")){
+            isSponsor = false;
+            return false;
+        }
+
+        return false;
     }
 
     public void takeAdventureCard(AdventureCard card){
