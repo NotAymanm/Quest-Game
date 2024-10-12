@@ -34,6 +34,10 @@ public class Player {
         return shields;
     }
 
+    public List<Set<AdventureCard>> getStages(){
+        return stages;
+    }
+
     public void setAsSponsor(){
         isSponsor = true;
     }

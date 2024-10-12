@@ -1,11 +1,8 @@
 package org.example;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import java.util.Collections;
-import java.util.Scanner;
 
 public class Main {
 
@@ -19,6 +16,7 @@ public class Main {
 
     private int currentPlayerIndex = 0;
     private EventCard currentEvent = null;
+    private int currentStageIndex = 0;
 
     private boolean gameOver = false;
 
@@ -268,6 +266,14 @@ public class Main {
         output.println("The quest has been discarded."); output.flush();
 
         nextTurn(input, output);
+    }
+
+
+
+    public List<Player> determineEligibleParticipants(PrintWriter output){
+        List<Player> eligibleParticipants = new ArrayList<>();
+
+        return eligibleParticipants;
     }
 
     public void printList(List<?> myList, PrintWriter output){

@@ -931,4 +931,40 @@ class MainTest {
                 "The game should display that the stage is valid and list the cards used");
     }
 
+    @Test
+    @DisplayName("Tests participant eligibility displayed")
+    void RESP_27_test_01(){
+        Main game = new Main();
+        game.initPlayers();
+
+        game.setCurrentEvent(new EventCard("Q2", "Quest"));
+
+        Player sponsor = game.getCurrentPlayer();
+        game.addAdventureCards("Weapon", "D5", 5, 1);
+        game.addAdventureCards("Foe", "F10", 10, 2);
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        String input = "y";
+        StringWriter output = new StringWriter();
+
+        game.findSponsor(new Scanner(input), new PrintWriter(output));
+        input = "0\nQuit\n0\n0\nQuit";
+        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+
+        Player p2 = game.getPlayer(1);
+        game.addAdventureCards("Weapon", "D5", 5, 1);
+        p2.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
+        Player p3 = game.getPlayer(2);
+        game.addAdventureCards("Weapon", "B15", 15, 1);
+        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
+        Player p4 = game.getPlayer(3);
+        game.addAdventureCards("Weapon", "B15", 15, 1);
+        p4.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        game.determineEligibleParticipants(new PrintWriter(output));
+
+        assertTrue(output.toString().contains("Eligible participants for the following stage: [P3, P4]"),
+                "The eligible participants should be listed as P3 and P4");
+    }
+
 }
