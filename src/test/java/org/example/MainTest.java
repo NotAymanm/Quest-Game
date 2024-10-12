@@ -905,4 +905,30 @@ class MainTest {
 
     }
 
+    @Test
+    @DisplayName("Tests game displays cards after valid stage")
+    void RESP_26_test_01(){
+        Main game = new Main();
+        game.initPlayers();
+
+        game.setCurrentEvent(new EventCard("Q3", "Quest"));
+
+        Player sponsor = game.getCurrentPlayer();
+        sponsor.setAsSponsor();
+
+        game.addAdventureCards("Foe", "F10", 10, 1);
+        game.addAdventureCards("Weapon", "D5", 5, 2);
+        game.addAdventureCards("Foe", "F5", 5, 2);
+
+        sponsor.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        String input = "0\nQuit\n0\n1\nQuit\n0\n0\nQuit";
+        StringWriter output = new StringWriter();
+
+        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+
+        assertTrue(output.toString().contains("Stage is valid. Cards used in this stage: [F10, D5]"),
+                "The game should display that the stage is valid and list the cards used");
+    }
+
 }
