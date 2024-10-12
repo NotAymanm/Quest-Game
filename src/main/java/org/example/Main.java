@@ -268,8 +268,6 @@ public class Main {
         nextTurn(input, output);
     }
 
-
-
     public List<Player> determineEligibleParticipants(PrintWriter output){
         List<Set<AdventureCard>> stages = questSponsor.getStages();
         List<Player> eligibleParticipants = new ArrayList<>();
@@ -301,6 +299,13 @@ public class Main {
         }
 
         return eligibleParticipants;
+    }
+
+    public List<Player> promptParticipantsContinue(List<Player> eligiblePlayers, Scanner input, PrintWriter output){
+        List<Player> participants = new ArrayList<>();
+
+
+        return participants;
     }
 
     public void printList(List<?> myList, PrintWriter output){

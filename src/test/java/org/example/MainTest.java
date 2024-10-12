@@ -967,4 +967,51 @@ class MainTest {
                 "The eligible participants should be listed as P3 and P4");
     }
 
+    @Test
+    @DisplayName("Tests game prompt eligible participants to either withdraw or tackle stage")
+    void RESP_28_test_01(){
+        Main game = new Main();
+        game.initPlayers();
+
+        game.setCurrentEvent(new EventCard("Q2", "Quest"));
+
+        Player sponsor = game.getCurrentPlayer();
+        game.addAdventureCards("Weapon", "D5", 5, 1);
+        game.addAdventureCards("Foe", "F10", 10, 2);
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        String input = "y";
+        StringWriter output = new StringWriter();
+
+        game.findSponsor(new Scanner(input), new PrintWriter(output));
+        input = "0\nQuit\n0\n0\nQuit";
+        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+
+        Player p3 = game.getPlayer(2);
+        game.addAdventureCards("Weapon", "B15", 15, 1);
+        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
+        Player p4 = game.getPlayer(3);
+        game.addAdventureCards("Weapon", "B15", 15, 1);
+        p4.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        List<Player> eligibleParticipants = game.determineEligibleParticipants(new PrintWriter(output));
+
+        input = "1\n2";
+        List<Player> participants = game.promptParticipantsContinue(eligibleParticipants, new Scanner(input), new PrintWriter(output));
+
+        assertEquals(1, participants.size(), "One participant should continue");
+        assertTrue(participants.contains(p3), "P3 should continue");
+        assertFalse(participants.contains(p4), "P4 should withdraw");
+
+        assertTrue(output.toString().contains("P3, do you want to (1) Tackle or (2) Withdraw the stage?"),
+                "P3 should be prompted");
+
+        assertTrue(output.toString().contains("P4, do you want to (1) Tackle or (2) Withdraw the stage?"),
+                "P4 should be prompted");
+
+        assertTrue(output.toString().contains("P3 will tackle the stage."));
+        assertTrue(output.toString().contains("P4 has withdrawn from the quest."));
+
+    }
+
 }
