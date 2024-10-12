@@ -1014,4 +1014,43 @@ class MainTest {
 
     }
 
+    @Test
+    @DisplayName("Tests participant draws 1 adventure card when choose to tackle stage")
+    void RESP_29_test_01(){
+        Main game = new Main();
+        game.initPlayers();
+
+        game.setCurrentEvent(new EventCard("Q2", "Quest"));
+
+        Player sponsor = game.getCurrentPlayer();
+        game.addAdventureCards("Weapon", "D5", 5, 1);
+        game.addAdventureCards("Foe", "F10", 10, 2);
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        String input = "y";
+        StringWriter output = new StringWriter();
+
+        game.findSponsor(new Scanner(input), new PrintWriter(output));
+        input = "0\nQuit\n0\n0\nQuit";
+        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+
+        Player p3 = game.getPlayer(2);
+        game.addAdventureCards("Weapon", "B15", 15, 1);
+        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
+        Player p4 = game.getPlayer(3);
+        game.addAdventureCards("Weapon", "B15", 15, 1);
+        p4.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        assertEquals(1, p3.getHandSize(), "P3 should have 1 card");
+
+        game.addAdventureCards("Foe", "F15", 15, 1);
+
+        input = "1\n2";
+        game.getParticipants(new Scanner(input), new PrintWriter(output));
+
+        assertEquals(2, p3.getHandSize(), "P3 should have drawn 1 adventure card");
+
+
+    }
+
 }

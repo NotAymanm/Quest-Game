@@ -322,6 +322,14 @@ public class Main {
         return participants;
     }
 
+
+    public List<Player> getParticipants(Scanner input, PrintWriter output){
+        List<Player> eligibleParticipants = determineEligibleParticipants(output);
+        List<Player> participants = promptParticipantsContinue(eligibleParticipants, input, output);
+
+        return participants;
+    }
+
     public void printList(List<?> myList, PrintWriter output){
         output.print("["); output.flush();
         for(int i = 0; i < myList.size(); i++){
