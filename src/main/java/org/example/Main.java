@@ -271,7 +271,34 @@ public class Main {
 
 
     public List<Player> determineEligibleParticipants(PrintWriter output){
+        List<Set<AdventureCard>> stages = questSponsor.getStages();
         List<Player> eligibleParticipants = new ArrayList<>();
+
+        for(Player player:players){
+            if(!player.toString().equals(questSponsor.toString())){
+                int totalWeaponValue = 0;
+                for(AdventureCard card : player.getHand()){
+                    if(card.getType().equals("Weapon")){
+                        totalWeaponValue += card.getValue();
+                    }
+                }
+                int totalStageValue = 0;
+                for(AdventureCard card : stages.get(currentStageIndex)){
+                    totalStageValue += card.getValue();
+                }
+                if(totalWeaponValue >= totalStageValue){
+                    eligibleParticipants.add(player);
+                }
+            }
+        }
+
+        if(eligibleParticipants.isEmpty()){
+            output.println("No eligible participants for the following stage."); output.flush();
+        }
+        else{
+            output.print("Eligible participants for the following stage: "); output.flush();
+            printList(eligibleParticipants, output);
+        }
 
         return eligibleParticipants;
     }
