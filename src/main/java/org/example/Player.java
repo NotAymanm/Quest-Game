@@ -39,51 +39,64 @@ public class Player {
     }
 
     public void sponsorCard(Scanner input, PrintWriter output, EventCard eventCard){
-
         if(!isSponsor) return;
-
         int numStages = Character.getNumericValue(eventCard.getName().charAt(1));
+        for(int i = 0; i < numStages; i++){
+            buildStage(input, output, i);
+        }
+    }
 
-        for(int i = 0; i < numStages; i++) {
-            boolean quit = false;
-            Set<AdventureCard> stageCards = new HashSet<>();
+    private void buildStage(Scanner input, PrintWriter output, int stageNumber){
+        boolean quit = false;
+        Set<AdventureCard> stageCards = new HashSet<>();
+        while(!quit){
+            output.print("Sponsor's hand (" + this + "): "); output.flush();
+            printList(hand, output);
+            output.println("Which card would you like to use for Stage " + (stageNumber + 1) +
+                    "? (Enter Index), or type 'Quit' to stop: "); output.flush();
 
-            while (!quit) {
-                output.print("Sponsor's hand (" + this + "): ");
-                output.flush();
-                printList(hand, output);
-                output.println("Which card would you like to use for Stage " + (i + 1) + "? (Enter Index), or type 'Quit' to stop: ");
-                output.flush();
-
-                String indexInput = input.nextLine();
-
-                if (indexInput.equalsIgnoreCase("quit")) {
-                    output.println("Stage " + (i + 1) + " building complete.\n");
-                    output.flush();
-                    quit = true;
-                } else {
-                    try {
-                        int index = Integer.parseInt(indexInput);
-                        if (index >= 0 && index < hand.size()) {
-                            AdventureCard sponsoredCard = hand.remove(index);
-                            output.println("You selected: " + sponsoredCard.getName());
-                            stageCards.add(sponsoredCard);
-                        } else {
-                            output.println("Invalid card number. Try again.");
-                            output.flush();
-                        }
-                    } catch (NumberFormatException e) {
-                        output.println("Invalid input. Please enter a card number or 'Quit'");
-                        output.flush();
-                    }
-
-                }
-            }
-
-            stages.add(stageCards);
-            stageCards.clear();
+            String indexInput = input.nextLine();
+            quit = processStageBuildingInput(indexInput, stageCards, output, stageNumber);
         }
 
+        stages.add(stageCards);
+    }
+
+    private boolean processStageBuildingInput(String indexInput, Set<AdventureCard> stageCards, PrintWriter output, int stageNumber){
+        if (indexInput.equalsIgnoreCase("quit")) {
+            if (stageCards.stream().noneMatch(card -> "Foe".equals(card.getType()))) {
+                output.println("Need a foe to complete stage."); output.flush();
+                return false;
+            } else {
+                output.println("Stage " + (stageNumber + 1) + " building complete.\n"); output.flush();
+                return true;
+            }
+        }
+        return handleStageBuildingCardSelection(indexInput, stageCards,output);
+    }
+
+    private boolean handleStageBuildingCardSelection(String indexInput, Set<AdventureCard> stageCards, PrintWriter output){
+        try {
+            int index = Integer.parseInt(indexInput);
+            if (index >= 0 && index < hand.size()) {
+                AdventureCard sponsoredCard = hand.remove(index);
+                if (stageCards.stream().noneMatch(card -> "Foe".equals(card.getType()))) {
+                    if (stageCards.stream().noneMatch(card -> sponsoredCard.getName().equals(card.getName()))) {
+                        output.println("You selected: " + sponsoredCard.getName()); output.flush();
+                        stageCards.add(sponsoredCard);
+                    } else {
+                        output.println("Sorry, you can't have repeated weapon cards per stage."); output.flush();
+                    }
+                } else {
+                    output.println("Sorry, you can't have more than ONE foe per stage."); output.flush();
+                }
+            } else {
+                output.println("Invalid card number. Try again."); output.flush();
+            }
+        } catch (NumberFormatException e) {
+            output.println("Invalid input. Please enter a card number or 'Quit'"); output.flush();
+        }
+        return false;
     }
 
     public boolean sponsorQuest(Scanner input, PrintWriter output){
