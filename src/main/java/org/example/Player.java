@@ -60,17 +60,22 @@ public class Player {
         }
 
         stages.add(stageCards);
+        stageCards.clear();
     }
 
     private boolean processStageBuildingInput(String indexInput, Set<AdventureCard> stageCards, PrintWriter output, int stageNumber){
         if (indexInput.equalsIgnoreCase("quit")) {
+            if(stageCards.isEmpty()){
+                output.println("A stage cannot be empty. You must add at least one card."); output.flush();
+                return false;
+            }
             if (stageCards.stream().noneMatch(card -> "Foe".equals(card.getType()))) {
                 output.println("Need a foe to complete stage."); output.flush();
                 return false;
-            } else {
-                output.println("Stage " + (stageNumber + 1) + " building complete.\n"); output.flush();
-                return true;
             }
+
+            output.println("Stage " + (stageNumber + 1) + " building complete.\n"); output.flush();
+            return true;
         }
         return handleStageBuildingCardSelection(indexInput, stageCards,output);
     }
