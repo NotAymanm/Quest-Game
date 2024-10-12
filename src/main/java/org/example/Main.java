@@ -272,7 +272,10 @@ public class Main {
         List<List<AdventureCard>> stages = questSponsor.getStages();
         List<Player> eligibleParticipants = new ArrayList<>();
 
-        for(Player player:players){
+        for(int i = 0; i < players.size(); i++){
+            //gets responses in order of current player
+            Player player = getPlayer((currentPlayerIndex + i) % players.size());
+
             if(!player.toString().equals(questSponsor.toString())){
                 int totalWeaponValue = 0;
                 for(AdventureCard card : player.getHand()){
@@ -326,6 +329,10 @@ public class Main {
     public List<Player> getParticipants(Scanner input, PrintWriter output){
         List<Player> eligibleParticipants = determineEligibleParticipants(output);
         List<Player> participants = promptParticipantsContinue(eligibleParticipants, input, output);
+
+        for(Player player : participants){
+            player.drawAdventureCards(1, adventureDeck, adventureDiscardPile);
+        }
 
         return participants;
     }
