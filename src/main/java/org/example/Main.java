@@ -303,7 +303,21 @@ public class Main {
 
     public List<Player> promptParticipantsContinue(List<Player> eligiblePlayers, Scanner input, PrintWriter output){
         List<Player> participants = new ArrayList<>();
+        for(Player player: eligiblePlayers){
+            output.println(player.toString() + ", do you want to (1) Tackle or (2) Withdraw the stage?"); output.flush();
 
+            if(input.hasNextLine()) {
+                String inputChoice = input.nextLine();
+                int inputNum = Integer.parseInt(inputChoice);
+                if(inputNum == 1){
+                    participants.add(player);
+                    output.println(player.toString() + " will tackle the stage."); output.flush();
+                }
+                else{
+                    output.println(player.toString() + " has withdrawn from the quest."); output.flush();
+                }
+            }
+        }
 
         return participants;
     }
