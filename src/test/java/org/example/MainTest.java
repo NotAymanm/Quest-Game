@@ -790,7 +790,7 @@ class MainTest {
 
         sponsor.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
-        String input = "0\n1\nQuit\n0\nQuit";
+        String input = "0\n0\nQuit\n0\nQuit";
         StringWriter output = new StringWriter();
 
         sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
@@ -817,7 +817,7 @@ class MainTest {
 
         sponsor.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
-        String input = "2\n2\n0\nQuit\n0\n2\nQuit";
+        String input = "2\n2\n0\nQuit\n0\n0\nQuit";
         StringWriter output = new StringWriter();
 
         sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
@@ -844,7 +844,7 @@ class MainTest {
 
         sponsor.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
-        String input = "2\nQuit\n0\nQuit\n0\nQuit";
+        String input = "2\nQuit\n0\nQuit\n0\n0\nQuit";
         StringWriter output = new StringWriter();
 
         sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
@@ -876,6 +876,33 @@ class MainTest {
 
         assertTrue(output.toString().contains("A stage cannot be empty. You must add at least one card."),
                 "The game should display 'A stage cannot be empty' when trying to quit with an empty stage");
+    }
+
+    @Test
+    @DisplayName("Tests game handles 'Quit' when stage value is insufficient compared to the previous stage")
+    void RESP_25_test_01(){
+        Main game = new Main();
+        game.initPlayers();
+
+        game.setCurrentEvent(new EventCard("Q2", "Quest"));
+
+        Player sponsor = game.getCurrentPlayer();
+        sponsor.setAsSponsor();
+
+        game.addAdventureCards("Foe", "F10", 10, 1);
+        game.addAdventureCards("Weapon", "D5", 5, 1);
+        game.addAdventureCards("Foe", "F5", 5, 2);
+
+        sponsor.takeAdventureCards(4, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        String input = "0\nQuit\n0\nQuit\n1\nQuit";
+        StringWriter output = new StringWriter();
+
+        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+
+        assertTrue(output.toString().contains("Insufficient value for this stage. The value must be greater than the previous stage."),
+                "The game should display 'Insufficient value for this stage' when trying to quit with insufficient stage value");
+
     }
 
 }
