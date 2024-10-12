@@ -80,6 +80,8 @@ public class Player {
                     return false;
                 }
             }
+            output.print("Stage is valid. Cards used in this stage: ");
+            printStageCards(stageCards, output);
             output.println("Stage " + (stageNumber + 1) + " building complete.\n"); output.flush();
             return true;
         }
@@ -302,6 +304,19 @@ public class Player {
             if(i < myList.size() -1){
                 output.print(", "); output.flush();
             }
+        }
+        output.println("]"); output.flush();
+    }
+
+    public void printStageCards(Set<AdventureCard> stageCards, PrintWriter output) {
+        int i = 0;
+        output.print("["); output.flush();
+        for (AdventureCard card : stageCards) {
+            output.print(card.getName()); output.flush();
+            if(i < stageCards.size() - 1){
+                output.print(", "); output.flush();
+            }
+            i++;
         }
         output.println("]"); output.flush();
     }
