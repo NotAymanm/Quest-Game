@@ -8,7 +8,7 @@ public class Player {
     private List<AdventureCard> hand;
     private int shields;
     private boolean isSponsor;
-    private List<Set<AdventureCard>> stages;
+    private List<List<AdventureCard>> stages;
 
     public Player(int id){
         this.id = id;
@@ -34,7 +34,7 @@ public class Player {
         return shields;
     }
 
-    public List<Set<AdventureCard>> getStages(){
+    public List<List<AdventureCard>> getStages(){
         return stages;
     }
 
@@ -53,7 +53,7 @@ public class Player {
     private void buildStage(Scanner input, PrintWriter output, int stageNumber){
         output.println("Stage " + (stageNumber + 1) + " building Started.");
         boolean quit = false;
-        Set<AdventureCard> stageCards = new HashSet<>();
+        List<AdventureCard> stageCards = new ArrayList<>();
         while(!quit){
             output.print("Sponsor's hand (" + this + "): "); output.flush();
             printList(hand, output);
@@ -64,11 +64,11 @@ public class Player {
             quit = processStageBuildingInput(indexInput, stageCards, output, stageNumber);
         }
 
-        stages.add(new HashSet<>(stageCards));
+        stages.add(new ArrayList<>(stageCards));
         stageCards.clear();
     }
 
-    private boolean processStageBuildingInput(String indexInput, Set<AdventureCard> stageCards, PrintWriter output, int stageNumber){
+    private boolean processStageBuildingInput(String indexInput, List<AdventureCard> stageCards, PrintWriter output, int stageNumber){
         if (indexInput.equalsIgnoreCase("quit")) {
             if(stageCards.isEmpty()){
                 output.println("A stage cannot be empty. You must add at least one card."); output.flush();
@@ -85,14 +85,14 @@ public class Player {
                 }
             }
             output.print("Stage is valid. Cards used in this stage: ");
-            printStageCards(stageCards, output);
+            printList(stageCards, output);
             output.println("Stage " + (stageNumber + 1) + " building complete.\n"); output.flush();
             return true;
         }
         return handleStageBuildingCardSelection(indexInput, stageCards,output);
     }
 
-    private List<Integer> prevValueCurValue(Set<AdventureCard> currentStageCards){
+    private List<Integer> prevValueCurValue(List<AdventureCard> currentStageCards){
         List<Integer> values = new ArrayList<>();
 
         if(stages.isEmpty()) return values;
@@ -115,7 +115,7 @@ public class Player {
         return value;
     }
 
-    private boolean handleStageBuildingCardSelection(String indexInput, Set<AdventureCard> stageCards, PrintWriter output){
+    private boolean handleStageBuildingCardSelection(String indexInput, List<AdventureCard> stageCards, PrintWriter output){
         try {
             int index = Integer.parseInt(indexInput);
             if (index >= 0 && index < hand.size()) {
@@ -182,7 +182,7 @@ public class Player {
             int currentStageValue = foeCards.getFirst().getValue();
             foeCards.removeFirst();
 
-            Set<String> usedWeaponTypes = new HashSet<>();
+            List<String> usedWeaponTypes = new ArrayList<>();
 
             while(currentStageValue <= lastStageValue && !weaponCards.isEmpty()){
                 AdventureCard weapon = weaponCards.getFirst();
@@ -308,19 +308,6 @@ public class Player {
             if(i < myList.size() -1){
                 output.print(", "); output.flush();
             }
-        }
-        output.println("]"); output.flush();
-    }
-
-    public void printStageCards(Set<AdventureCard> stageCards, PrintWriter output) {
-        int i = 0;
-        output.print("["); output.flush();
-        for (AdventureCard card : stageCards) {
-            output.print(card.getName()); output.flush();
-            if(i < stageCards.size() - 1){
-                output.print(", "); output.flush();
-            }
-            i++;
         }
         output.println("]"); output.flush();
     }

@@ -269,7 +269,7 @@ public class Main {
     }
 
     public List<Player> determineEligibleParticipants(PrintWriter output){
-        List<Set<AdventureCard>> stages = questSponsor.getStages();
+        List<List<AdventureCard>> stages = questSponsor.getStages();
         List<Player> eligibleParticipants = new ArrayList<>();
 
         for(Player player:players){
