@@ -47,6 +47,7 @@ public class Player {
     }
 
     private void buildStage(Scanner input, PrintWriter output, int stageNumber){
+        output.println("Stage " + (stageNumber + 1) + " building Started.");
         boolean quit = false;
         Set<AdventureCard> stageCards = new HashSet<>();
         while(!quit){
@@ -59,7 +60,7 @@ public class Player {
             quit = processStageBuildingInput(indexInput, stageCards, output, stageNumber);
         }
 
-        stages.add(stageCards);
+        stages.add(new HashSet<>(stageCards));
         stageCards.clear();
     }
 
@@ -73,28 +74,57 @@ public class Player {
                 output.println("Need a foe to complete stage."); output.flush();
                 return false;
             }
-
+            if(!prevValueCurValue(stageCards).isEmpty()){
+                if(!(prevValueCurValue(stageCards).get(0) < prevValueCurValue(stageCards).get(1))){
+                    output.println("Insufficient value for this stage. The value must be greater than the previous stage."); output.flush();
+                    return false;
+                }
+            }
             output.println("Stage " + (stageNumber + 1) + " building complete.\n"); output.flush();
             return true;
         }
         return handleStageBuildingCardSelection(indexInput, stageCards,output);
     }
 
+    private List<Integer> prevValueCurValue(Set<AdventureCard> currentStageCards){
+        List<Integer> values = new ArrayList<>();
+
+        if(stages.isEmpty()) return values;
+
+        int currentStageValue = 0;
+        for(AdventureCard card: currentStageCards){
+            currentStageValue += card.getValue();
+        }
+        int prevStageValue = getStageValue(stages.size()-1);
+        values.add(prevStageValue);
+        values.add(currentStageValue);
+        return values;
+    }
+
+    private int getStageValue(int index){
+        int value = 0;
+        for(AdventureCard card : stages.get(index)){
+            value += card.getValue();
+        }
+        return value;
+    }
+
     private boolean handleStageBuildingCardSelection(String indexInput, Set<AdventureCard> stageCards, PrintWriter output){
         try {
             int index = Integer.parseInt(indexInput);
             if (index >= 0 && index < hand.size()) {
-                AdventureCard sponsoredCard = hand.remove(index);
-                if (stageCards.stream().noneMatch(card -> "Foe".equals(card.getType()))) {
-                    if (stageCards.stream().noneMatch(card -> sponsoredCard.getName().equals(card.getName()))) {
-                        output.println("You selected: " + sponsoredCard.getName()); output.flush();
-                        stageCards.add(sponsoredCard);
-                    } else {
-                        output.println("Sorry, you can't have repeated weapon cards per stage."); output.flush();
-                    }
-                } else {
+                AdventureCard sponsoredCard = hand.get(index);
+                if(stageCards.stream().anyMatch(card -> "Foe".equals(card.getType())) && sponsoredCard.getType().equals("Foe")){
                     output.println("Sorry, you can't have more than ONE foe per stage."); output.flush();
                 }
+                else if (stageCards.stream().noneMatch(card -> sponsoredCard.getName().equals(card.getName()))) {
+                    output.println("You selected: " + sponsoredCard.getName()); output.flush();
+                    hand.remove(index);
+                    stageCards.add(sponsoredCard);
+                } else {
+                    output.println("Sorry, you can't have repeated weapon cards per stage."); output.flush();
+                }
+
             } else {
                 output.println("Invalid card number. Try again."); output.flush();
             }
