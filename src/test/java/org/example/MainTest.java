@@ -754,7 +754,7 @@ class MainTest {
         game.addAdventureCards("Weapon", "B15", 15, 1);
         game.addAdventureCards("Foe", "F5", 5, 1);
 
-        sponsor .takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile());
+        sponsor.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         String input = "0\nQuit\n0\nQuit";
         StringWriter output = new StringWriter();
@@ -770,6 +770,87 @@ class MainTest {
         assertTrue(output.toString().contains("You selected: F5"), "The game should confirm the selected card");
         assertTrue(output.toString().contains("Stage 1 building complete."), "The game should confirm when sponsor quits");
 
+    }
+
+    @Test
+    @DisplayName("Tests sponsor enters a necessarily valid position for Foe")
+    void RESP_23_test_01(){
+        Main game = new Main();
+        game.initPlayers();
+
+        game.setCurrentEvent(new EventCard("Q2", "Quest"));
+
+        Player sponsor = game.getCurrentPlayer();
+        sponsor.setAsSponsor();
+
+        game.addAdventureCards("Weapon", "H10", 10, 2);
+        game.addAdventureCards("Foe", "F10", 10, 1);
+        game.addAdventureCards("Weapon", "B15", 15, 1);
+        game.addAdventureCards("Foe", "F5", 5, 1);
+
+        sponsor.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        String input = "0\n1\nQuit\n0\nQuit";
+        StringWriter output = new StringWriter();
+
+        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+
+        assertTrue(output.toString().contains("Sorry, you can't have more than ONE foe per stage"),
+                "The game should display an explanation of invalid input (No duplicate foes)");
+    }
+
+    @Test
+    @DisplayName("Tests sponsor enters a necessarily valid position for repeated Weapon")
+    void RESP_23_test_02(){
+        Main game = new Main();
+        game.initPlayers();
+
+        game.setCurrentEvent(new EventCard("Q2", "Quest"));
+
+        Player sponsor = game.getCurrentPlayer();
+        sponsor.setAsSponsor();
+
+        game.addAdventureCards("Weapon", "H10", 10, 2);
+        game.addAdventureCards("Foe", "F10", 10, 1);
+        game.addAdventureCards("Weapon", "B15", 15, 1);
+        game.addAdventureCards("Foe", "F5", 5, 1);
+
+        sponsor.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        String input = "2\n2\n0\nQuit\n0\n2\nQuit";
+        StringWriter output = new StringWriter();
+
+        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+
+        assertTrue(output.toString().contains("Sorry, you can't have repeated weapon cards per stage"),
+                "The game should display an explanation of invalid input (No duplicate Weapon cards)");
+    }
+
+    @Test
+    @DisplayName("Tests stage has no Foe")
+    void RESP_23_test_03(){
+        Main game = new Main();
+        game.initPlayers();
+
+        game.setCurrentEvent(new EventCard("Q2", "Quest"));
+
+        Player sponsor = game.getCurrentPlayer();
+        sponsor.setAsSponsor();
+
+        game.addAdventureCards("Weapon", "H10", 10, 2);
+        game.addAdventureCards("Foe", "F10", 10, 1);
+        game.addAdventureCards("Weapon", "B15", 15, 1);
+        game.addAdventureCards("Foe", "F5", 5, 1);
+
+        sponsor.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        String input = "2\nQuit\n0\nQuit\n0\nQuit";
+        StringWriter output = new StringWriter();
+
+        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+
+        assertTrue(output.toString().contains("Need a foe to complete stage"),
+                "The game should display an explanation of invalid stage (Need a foe card)");
     }
 
 }
