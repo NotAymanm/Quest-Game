@@ -365,6 +365,9 @@ public class Main {
             else{
                 eligibleParticipants.add(player);
             }
+
+            adventureDiscardPile.addAll(attack);
+            attack.clear();
         }
 
         for(Player player:eligibleParticipants){
