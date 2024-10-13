@@ -47,11 +47,49 @@ public class Player {
     public List<AdventureCard> buildAttack(Scanner input, PrintWriter output){
         output.println(this + "'s attack building Started.");
         boolean quit = false;
-        output.print(this + "'s hand: "); output.flush();
-        printList(hand, output);
-        output.println("Which card would you like to include in your attack? (Enter Index), or 'Quit' to stop: "); output.flush();
-        String indexInput = input.nextLine();
+        while(!quit){
+            output.print(this + "'s hand: "); output.flush();
+            printList(hand, output);
+            output.println("Which card would you like to include in your attack? (Enter Index), or 'Quit' to stop: "); output.flush();
+            String indexInput = input.nextLine();
+            quit = processAttackInput(indexInput, output);
+        }
         return attack;
+    }
+
+    public boolean processAttackInput(String indexInput, PrintWriter output){
+        if (indexInput.equalsIgnoreCase("quit")) {
+            output.print("Attack is valid. Cards used in this attack: ");
+            printList(attack, output);
+            output.println(this + "'s attack building complete.\n"); output.flush();
+            return true;
+        }
+        return handleAttackSelection(indexInput, output);
+    }
+
+    private boolean handleAttackSelection(String indexInput, PrintWriter output){
+        try {
+            int index = Integer.parseInt(indexInput);
+            if (index >= 0 && index < hand.size()) {
+                AdventureCard selectedAttack = hand.get(index);
+                if(selectedAttack.getType().equals("Foe")){
+                    output.println("Sorry, you can't use a foe to attack."); output.flush();
+                }
+                else if (attack.stream().noneMatch(card -> selectedAttack.getName().equals(card.getName()))) {
+                    output.println("You selected: " + selectedAttack.getName()); output.flush();
+                    hand.remove(index);
+                    attack.add(selectedAttack);
+                } else {
+                    output.println("Sorry, you can't have repeated weapon cards in an attack."); output.flush();
+                }
+
+            } else {
+                output.println("Invalid card number. Try again."); output.flush();
+            }
+        } catch (NumberFormatException e) {
+            output.println("Invalid input. Please enter a card number or 'Quit'"); output.flush();
+        }
+        return false;
     }
 
     public void sponsorCard(Scanner input, PrintWriter output, EventCard eventCard){
