@@ -1331,4 +1331,44 @@ class MainTest {
         assertEquals(2, p3.getShields(), "Should give P3 2 shields after beating the quest.");
     }
 
+    @Test
+    @DisplayName("Tests game discards sponsor's cards")
+    void RESP_37_test_01(){
+        Main game = new Main();
+        game.initPlayers();
+
+        game.setCurrentEvent(new EventCard("Q2", "Quest"));
+        Player sponsor = game.getCurrentPlayer();
+        game.addAdventureCards("Weapon", "D5", 5, 1);
+        game.addAdventureCards("Foe", "F10", 10, 1);
+        game.addAdventureCards("Foe", "F15", 15, 1);
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        Player p3 = game.getPlayer(2);
+        game.addAdventureCards("Weapon", "E30", 30, 1);
+        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        game.addAdventureCards("Weapon", "E30", 30, 1);
+
+        game.addAdventureCards("Weapon", "S10", 10, 6);
+
+        assertEquals(0, p3.getShields(), "P3 should have 0 shields initially.");
+
+        String input = "y\n0\nquit\n0\n0\nquit\n1\n0\nquit\n1\n0\nquit\n\n";
+        StringWriter output = new StringWriter();
+
+        game.processQuest(new Scanner(input), new PrintWriter(output));
+
+        assertFalse(game.getAdventureDiscardPile().isEmpty(), "Discard Pile should not be empty");
+
+        boolean discarded = game.getAdventureDiscardPile().getLast().getName().equals("D5");
+        discarded = discarded && game.getAdventureDiscardPile().get(game.getAdventureDiscardPile().size()-2).getName().equals("F15");
+        discarded = discarded && game.getAdventureDiscardPile().get(game.getAdventureDiscardPile().size()-3).getName().equals("F10");
+
+        assertTrue(discarded, "Sponsor Cards should be discarded");
+
+        assertEquals(5, game.getPlayer(0).getHandSize(), "Sponsor should have 5 cards");
+
+    }
+
 }
