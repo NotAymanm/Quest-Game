@@ -379,10 +379,10 @@ public class Main {
         }
 
         for(Player player:eligibleParticipants){
-            output.println(player.toString() + "'s Attack was successful! Player can proceed to the next stage.");
+            output.println(player.toString() + "'s Attack was successful! Player can proceed to the next stage."); output.flush();
         }
         for(Player player:ineligibleParticipants){
-            output.println(player.toString() + "'s Attack failed! Player cannot proceed to the next stage.");
+            output.println(player.toString() + "'s Attack failed! Player cannot proceed to the next stage."); output.flush();
         }
 
         return eligibleParticipants;
