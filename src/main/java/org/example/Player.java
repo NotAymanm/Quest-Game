@@ -79,6 +79,8 @@ public class Player {
                     output.println("You selected: " + selectedAttack.getName()); output.flush();
                     hand.remove(index);
                     attack.add(selectedAttack);
+                    output.print(this + "'s current attack: "); output.flush();
+                    printList(attack, output);
                 } else {
                     output.println("Sorry, you can't have repeated weapon cards in an attack."); output.flush();
                 }
