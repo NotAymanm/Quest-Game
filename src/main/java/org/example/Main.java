@@ -349,6 +349,31 @@ public class Main {
         List<Player> eligibleParticipants = new ArrayList<>();
         List<Player> ineligibleParticipants = new ArrayList<>();
 
+        for(Player player : participants){
+            List<AdventureCard> attack = player.buildAttack(input, output);
+            int attackValue = 0;
+            for(AdventureCard card : attack){
+                attackValue += card.getValue();
+            }
+            int totalStageValue = 0;
+            for(AdventureCard card : stages.get(currentStageIndex)){
+                totalStageValue += card.getValue();
+            }
+            if(attackValue < totalStageValue){
+                ineligibleParticipants.add(player);
+            }
+            else{
+                eligibleParticipants.add(player);
+            }
+        }
+
+        for(Player player:eligibleParticipants){
+            output.println(player.toString() + "'s Attack was successful! Player can proceed to the next stage.");
+        }
+        for(Player player:ineligibleParticipants){
+            output.println(player.toString() + "'s Attack failed! Player cannot proceed to the next stage.");
+        }
+
         return eligibleParticipants;
     }
 
