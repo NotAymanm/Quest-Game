@@ -332,7 +332,6 @@ public class Main {
         return participants;
     }
 
-
     public List<Player> getParticipants(Scanner input, PrintWriter output){
         List<Player> eligibleParticipants = determineEligibleParticipants(output);
         List<Player> participants = promptParticipantsContinue(eligibleParticipants, input, output);
@@ -342,6 +341,15 @@ public class Main {
         }
 
         return participants;
+    }
+
+    public List<Player> resolveAttacks(List<Player> participants, Scanner input, PrintWriter output){
+
+        List<List<AdventureCard>> stages = questSponsor.getStages();
+        List<Player> eligibleParticipants = new ArrayList<>();
+        List<Player> ineligibleParticipants = new ArrayList<>();
+
+        return eligibleParticipants;
     }
 
     public void processQuest(Scanner input, PrintWriter output){

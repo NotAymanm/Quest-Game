@@ -1203,4 +1203,71 @@ class MainTest {
                 "The current attack should display be updated and displayed.");
     }
 
+    @Test
+    @DisplayName("Tests player's attack succeeded")
+    void RESP_34_test_01(){
+        Main game = new Main();
+        game.initPlayers();
+
+        game.setCurrentEvent(new EventCard("Q2", "Quest"));
+        Player sponsor = game.getCurrentPlayer();
+        game.addAdventureCards("Weapon", "D5", 5, 1);
+        game.addAdventureCards("Foe", "F10", 10, 2);
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        String input = "y";
+        StringWriter output = new StringWriter();
+        game.findSponsor(new Scanner(input), new PrintWriter(output));
+
+        input = "0\nQuit\n0\n0\nQuit";
+        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+
+        Player p3 = game.getPlayer(2);
+        game.addAdventureCards("Weapon", "B15", 15, 2);
+        p3.takeAdventureCards(2, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+
+        List<Player> participants = new ArrayList<>();
+        participants.add(p3);
+
+        input = "0\nQuit\n0\nQuit";
+        game.resolveAttacks(participants, new Scanner(input), new PrintWriter(output));
+
+        assertTrue(output.toString().contains("P3's Attack was successful!"),
+                "P3's attack should have been successful.");
+    }
+
+    @Test
+    @DisplayName("Tests player's attack failed")
+    void RESP_34_test_02(){
+        Main game = new Main();
+        game.initPlayers();
+
+        game.setCurrentEvent(new EventCard("Q2", "Quest"));
+        Player sponsor = game.getCurrentPlayer();
+        game.addAdventureCards("Weapon", "D5", 5, 1);
+        game.addAdventureCards("Foe", "F10", 10, 2);
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        String input = "y";
+        StringWriter output = new StringWriter();
+        game.findSponsor(new Scanner(input), new PrintWriter(output));
+
+        input = "0\nQuit\n0\n0\nQuit";
+        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+
+        Player p3 = game.getPlayer(2);
+        game.addAdventureCards("Weapon", "D5", 5, 2);
+        p3.takeAdventureCards(2, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        List<Player> participants = new ArrayList<>();
+        participants.add(p3);
+
+        input = "0\nQuit";
+        game.resolveAttacks(participants, new Scanner(input), new PrintWriter(output));
+
+        assertTrue(output.toString().contains("P3's Attack failed!"),
+                "P3's attack should have been Unsuccessful.");
+    }
+
 }
