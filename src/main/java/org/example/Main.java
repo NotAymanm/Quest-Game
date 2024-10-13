@@ -322,6 +322,13 @@ public class Main {
             }
         }
 
+        if(participants.isEmpty()){
+            output.println("No participants remain. The quest has ended."); output.flush();
+            currentEvent = null;
+            output.println("The quest has been discarded."); output.flush();
+            nextTurn(input, output);
+        }
+
         return participants;
     }
 
@@ -338,7 +345,15 @@ public class Main {
     }
 
     public void processQuest(Scanner input, PrintWriter output){
+        findSponsor(input, output);
 
+        if(currentEvent == null) return;
+
+        questSponsor.sponsorCard(input, output, currentEvent);
+
+        List<Player> participants = getParticipants(input, output);
+
+        if(currentEvent == null) return;
     }
 
     public void printList(List<?> myList, PrintWriter output){
