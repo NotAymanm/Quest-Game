@@ -45,7 +45,12 @@ public class Player {
     }
 
     public List<AdventureCard> buildAttack(Scanner input, PrintWriter output){
-
+        output.println(this + "'s attack building Started.");
+        boolean quit = false;
+        output.print(this + "'s hand: "); output.flush();
+        printList(hand, output);
+        output.println("Which card would you like to include in your attack? (Enter Index), or 'Quit' to stop: "); output.flush();
+        String indexInput = input.nextLine();
         return attack;
     }
 
