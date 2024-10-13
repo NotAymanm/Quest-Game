@@ -337,6 +337,10 @@ public class Main {
         return participants;
     }
 
+    public void processQuest(Scanner input, PrintWriter output){
+
+    }
+
     public void printList(List<?> myList, PrintWriter output){
         output.print("["); output.flush();
         for(int i = 0; i < myList.size(); i++){

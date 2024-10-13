@@ -1049,8 +1049,71 @@ class MainTest {
         game.getParticipants(new Scanner(input), new PrintWriter(output));
 
         assertEquals(2, p3.getHandSize(), "P3 should have drawn 1 adventure card");
+    }
 
+    @Test
+    @DisplayName("Tests quest ends if no participants for stage")
+    void RESP_30_test_01(){
+        Main game = new Main();
+        game.initPlayers();
+        game.setCurrentEvent(new EventCard("Q2", "Quest"));
 
+        Player sponsor = game.getCurrentPlayer();
+        game.addAdventureCards("Weapon", "D5", 5, 1);
+        game.addAdventureCards("Foe", "F10", 10, 2);
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        Player p3 = game.getPlayer(2);
+        game.addAdventureCards("Weapon", "B15", 15, 1);
+        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
+        Player p4 = game.getPlayer(3);
+        game.addAdventureCards("Weapon", "B15", 15, 1);
+        p4.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        assertEquals(1, p3.getHandSize(), "P3 should have 1 card");
+
+        game.addAdventureCards("Foe", "F15", 15, 1);
+
+        String input = "y\n0\nQuit\n0\n0\nQuit\n2\n2\n\n";
+        StringWriter output = new StringWriter();
+
+        game.processQuest(new Scanner(input), new PrintWriter(output));
+
+        assertNull(game.getCurrentEvent(), "Quest should end as there are no participants left");
+
+        assertTrue(output.toString().contains("No participants remain. The quest has ended."),
+                "Quest should end as there are no participants left");
+    }
+
+    @Test
+    @DisplayName("Tests quest continues if there are participants for stage")
+    void RESP_30_test_02(){
+        Main game = new Main();
+        game.initPlayers();
+        game.setCurrentEvent(new EventCard("Q2", "Quest"));
+
+        Player sponsor = game.getCurrentPlayer();
+        game.addAdventureCards("Weapon", "D5", 5, 1);
+        game.addAdventureCards("Foe", "F10", 10, 2);
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        Player p3 = game.getPlayer(2);
+        game.addAdventureCards("Weapon", "B15", 15, 1);
+        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
+        Player p4 = game.getPlayer(3);
+        game.addAdventureCards("Weapon", "B15", 15, 1);
+        p4.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        assertEquals(1, p3.getHandSize(), "P3 should have 1 card");
+
+        game.addAdventureCards("Foe", "F15", 15, 2);
+
+        String input = "y\n0\nQuit\n0\n0\nQuit\n1\n1";
+        StringWriter output = new StringWriter();
+
+        game.processQuest(new Scanner(input), new PrintWriter(output));
+
+        assertNotNull(game.getCurrentEvent(), "Quest should NOT end as there are participants left");
     }
 
 }
