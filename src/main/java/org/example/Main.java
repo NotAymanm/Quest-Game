@@ -405,6 +405,18 @@ public class Main {
             participantsCheck.addAll(resolveAttacks(participants,input, output, i));
         }
 
+        output.println("The quest has ended."); output.flush();
+
+        for(Player questWinner : participantsCheck){
+            questWinner.addShields(numStages);
+        }
+
+        currentEvent = null;
+        questSponsor.removeSponsor();
+        questSponsor = null;
+        output.println("The quest card has been discarded."); output.flush();
+        nextTurn(input, output);
+
     }
 
     public void printList(List<?> myList, PrintWriter output){
