@@ -1175,4 +1175,32 @@ class MainTest {
                 "The game should display an explanation of invalid input (No duplicate Weapon cards)");
     }
 
+    @Test
+    @DisplayName("Tests valid card included in attack and the updated attack is displayed")
+    void RESP_33_test_01(){
+        Main game = new Main();
+        game.initPlayers();
+
+        game.setCurrentEvent(new EventCard("Q2", "Quest"));
+        Player sponsor = game.getCurrentPlayer();
+        game.addAdventureCards("Weapon", "D5", 5, 1);
+        game.addAdventureCards("Foe", "F10", 10, 2);
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
+        sponsor.setAsSponsor();
+
+        String input = "y\n0\nQuit\n0\n0\nQuit";
+        StringWriter output = new StringWriter();
+        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+
+        Player p3 = game.getPlayer(2);
+        game.addAdventureCards("Weapon", "B15", 15, 2);
+        p3.takeAdventureCards(2, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        input = "0\nQuit";
+        p3.buildAttack(new Scanner(input), new PrintWriter(output));
+
+        assertTrue(output.toString().contains("P3's current attack: [B15]"),
+                "The current attack should display be updated and displayed.");
+    }
+
 }
