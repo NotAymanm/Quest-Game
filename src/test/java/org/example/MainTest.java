@@ -961,7 +961,7 @@ class MainTest {
         game.addAdventureCards("Weapon", "B15", 15, 1);
         p4.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
-        game.determineEligibleParticipants(new PrintWriter(output));
+        game.determineEligibleParticipants(new PrintWriter(output), 0, game.getPlayers());
 
         assertTrue(output.toString().contains("Eligible participants for the following stage: [P3, P4]"),
                 "The eligible participants should be listed as P3 and P4");
@@ -994,7 +994,7 @@ class MainTest {
         game.addAdventureCards("Weapon", "B15", 15, 1);
         p4.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
-        List<Player> eligibleParticipants = game.determineEligibleParticipants(new PrintWriter(output));
+        List<Player> eligibleParticipants = game.determineEligibleParticipants(new PrintWriter(output), 0, game.getPlayers());
 
         input = "1\n2";
         List<Player> participants = game.promptParticipantsContinue(eligibleParticipants, new Scanner(input), new PrintWriter(output));
@@ -1046,7 +1046,7 @@ class MainTest {
         game.addAdventureCards("Foe", "F15", 15, 1);
 
         input = "1\n2";
-        game.getParticipants(new Scanner(input), new PrintWriter(output));
+        game.getParticipants(game.getPlayers(), new Scanner(input), new PrintWriter(output), 0);
 
         assertEquals(2, p3.getHandSize(), "P3 should have drawn 1 adventure card");
     }
@@ -1108,12 +1108,11 @@ class MainTest {
 
         game.addAdventureCards("Foe", "F15", 15, 2);
 
-        String input = "y\n0\nQuit\n0\n0\nQuit\n1\n1";
+        String input = "y\n0\nQuit\n0\n0\nQuit\n1\n1\n1\nQuit\n1\nQuit\n\n";
         StringWriter output = new StringWriter();
 
         game.processQuest(new Scanner(input), new PrintWriter(output));
-
-        assertNotNull(game.getCurrentEvent(), "Quest should NOT end as there are participants left");
+        assertTrue(output.toString().contains("Stage 1 begins!"), "Quest should NOT end as there are participants left");
     }
 
     @Test
@@ -1231,7 +1230,7 @@ class MainTest {
         participants.add(p3);
 
         input = "0\nQuit\n0\nQuit";
-        game.resolveAttacks(participants, new Scanner(input), new PrintWriter(output));
+        game.resolveAttacks(participants, new Scanner(input), new PrintWriter(output), 0);
 
         assertTrue(output.toString().contains("P3's Attack was successful!"),
                 "P3's attack should have been successful.");
@@ -1264,7 +1263,7 @@ class MainTest {
         participants.add(p3);
 
         input = "0\nQuit";
-        game.resolveAttacks(participants, new Scanner(input), new PrintWriter(output));
+        game.resolveAttacks(participants, new Scanner(input), new PrintWriter(output), 0);
 
         assertTrue(output.toString().contains("P3's Attack failed!"),
                 "P3's attack should have been Unsuccessful.");
@@ -1297,11 +1296,11 @@ class MainTest {
         participants.add(p3);
 
         input = "0\nQuit";
-        game.resolveAttacks(participants, new Scanner(input), new PrintWriter(output));
+        game.resolveAttacks(participants, new Scanner(input), new PrintWriter(output), 0);
 
         assertFalse(game.getAdventureDiscardPile().isEmpty(), "Discard Pile should not be empty");
 
-        assertTrue(game.getAdventureDiscardPile().getLast().getName().equals("D5"),
+        assertEquals("D5", game.getAdventureDiscardPile().getLast().getName(),
                 "P3's attack should have been Unsuccessful.");
     }
 

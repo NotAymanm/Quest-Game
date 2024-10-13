@@ -16,7 +16,6 @@ public class Main {
 
     private int currentPlayerIndex = 0;
     private EventCard currentEvent = null;
-    private int currentStageIndex = 0;
 
     private boolean gameOver = false;
 
@@ -245,7 +244,10 @@ public class Main {
 
     public void nextTurn(Scanner input, PrintWriter output){
         endTurn(input, output);
-        startTurn(output);
+        displayWinners(output);
+        if(!gameOver){
+            startTurn(output);
+        }
     }
 
     public void findSponsor(Scanner input, PrintWriter output){
@@ -268,15 +270,17 @@ public class Main {
         nextTurn(input, output);
     }
 
-    public List<Player> determineEligibleParticipants(PrintWriter output){
+    public List<Player> determineEligibleParticipants(PrintWriter output, int stage, List<Player> participantsCheck){
         List<List<AdventureCard>> stages = questSponsor.getStages();
         List<Player> eligibleParticipants = new ArrayList<>();
 
-        for(int i = 0; i < players.size(); i++){
-            //gets responses in order of current player
-            Player player = getPlayer((currentPlayerIndex + i) % players.size());
+        int startIndex = (currentPlayerIndex) % participantsCheck.size();
 
-            if(!player.toString().equals(questSponsor.toString())){
+        for(int i = 0; i < participantsCheck.size(); i++){
+            //gets responses in order of current player
+            Player player = participantsCheck.get((startIndex + i) % participantsCheck.size());
+
+            if(!player.isSponsor()){
                 int totalWeaponValue = 0;
                 for(AdventureCard card : player.getHand()){
                     if(card.getType().equals("Weapon")){
@@ -284,7 +288,7 @@ public class Main {
                     }
                 }
                 int totalStageValue = 0;
-                for(AdventureCard card : stages.get(currentStageIndex)){
+                for(AdventureCard card : stages.get(stage)){
                     totalStageValue += card.getValue();
                 }
                 if(totalWeaponValue >= totalStageValue){
@@ -325,6 +329,8 @@ public class Main {
         if(participants.isEmpty()){
             output.println("No participants remain. The quest has ended."); output.flush();
             currentEvent = null;
+            questSponsor.removeSponsor();
+            questSponsor = null;
             output.println("The quest has been discarded."); output.flush();
             nextTurn(input, output);
         }
@@ -332,9 +338,11 @@ public class Main {
         return participants;
     }
 
-    public List<Player> getParticipants(Scanner input, PrintWriter output){
-        List<Player> eligibleParticipants = determineEligibleParticipants(output);
+    public List<Player> getParticipants(List<Player> participantsCheck, Scanner input, PrintWriter output, int stage){
+        List<Player> eligibleParticipants = determineEligibleParticipants(output, stage, participantsCheck);
         List<Player> participants = promptParticipantsContinue(eligibleParticipants, input, output);
+
+        output.println("Stage " + (stage+1)+ " begins!"); output.flush();
 
         for(Player player : participants){
             player.drawAdventureCards(1, adventureDeck, adventureDiscardPile);
@@ -343,7 +351,7 @@ public class Main {
         return participants;
     }
 
-    public List<Player> resolveAttacks(List<Player> participants, Scanner input, PrintWriter output){
+    public List<Player> resolveAttacks(List<Player> participants, Scanner input, PrintWriter output, int stage){
 
         List<List<AdventureCard>> stages = questSponsor.getStages();
         List<Player> eligibleParticipants = new ArrayList<>();
@@ -356,7 +364,7 @@ public class Main {
                 attackValue += card.getValue();
             }
             int totalStageValue = 0;
-            for(AdventureCard card : stages.get(currentStageIndex)){
+            for(AdventureCard card : stages.get(stage)){
                 totalStageValue += card.getValue();
             }
             if(attackValue < totalStageValue){
@@ -387,9 +395,16 @@ public class Main {
 
         questSponsor.sponsorCard(input, output, currentEvent);
 
-        List<Player> participants = getParticipants(input, output);
+        int numStages = Character.getNumericValue(currentEvent.getName().charAt(1));
 
-        if(currentEvent == null) return;
+        List<Player> participantsCheck = new ArrayList<>(players);
+        for(int i = 0; i < numStages; i++){
+            List<Player> participants = getParticipants(participantsCheck, input, output, i);
+            if(currentEvent == null) return;
+            participantsCheck.clear();
+            participantsCheck.addAll(resolveAttacks(participants,input, output, i));
+        }
+
     }
 
     public void printList(List<?> myList, PrintWriter output){

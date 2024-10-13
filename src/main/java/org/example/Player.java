@@ -44,6 +44,14 @@ public class Player {
         isSponsor = true;
     }
 
+    public void removeSponsor(){
+        isSponsor = false;
+    }
+
+    public boolean isSponsor() {
+        return isSponsor;
+    }
+
     public List<AdventureCard> buildAttack(Scanner input, PrintWriter output){
         output.println(this + "'s attack building Started.");
         boolean quit = false;
