@@ -52,6 +52,10 @@ public class Player {
         return isSponsor;
     }
 
+    public void clearStages(){
+        stages.clear();
+    }
+
     public List<AdventureCard> buildAttack(Scanner input, PrintWriter output){
         output.println(this + "'s attack building Started.");
         boolean quit = false;

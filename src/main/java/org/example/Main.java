@@ -328,11 +328,7 @@ public class Main {
 
         if(participants.isEmpty()){
             output.println("No participants remain. The quest has ended."); output.flush();
-            currentEvent = null;
-            questSponsor.removeSponsor();
-            questSponsor = null;
-            output.println("The quest has been discarded."); output.flush();
-            nextTurn(input, output);
+            endQuest(input, output);
         }
 
         return participants;
@@ -411,12 +407,34 @@ public class Main {
             questWinner.addShields(numStages);
         }
 
+        endQuest(input, output);
+    }
+
+    public void endQuest(Scanner input, PrintWriter output){
+        List<List<AdventureCard>> stages = questSponsor.getStages();
+
+        int numCards = numCardsSonsored(stages) + stages.size();
+
+        for(List<AdventureCard> stage : stages){
+            adventureDiscardPile.addAll(stage);
+        }
+        questSponsor.clearStages();
+
+        questSponsor.drawAdventureCards(numCards, adventureDeck, adventureDiscardPile);
+
         currentEvent = null;
         questSponsor.removeSponsor();
         questSponsor = null;
         output.println("The quest card has been discarded."); output.flush();
         nextTurn(input, output);
+    }
 
+    public int numCardsSonsored(List<List<AdventureCard>> stages){
+        int numCards = 0;
+        for(List<AdventureCard> stage : stages){
+            numCards += stage.size();
+        }
+        return numCards;
     }
 
     public void printList(List<?> myList, PrintWriter output){

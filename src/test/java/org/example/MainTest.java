@@ -1073,6 +1073,7 @@ class MainTest {
         assertEquals(1, p3.getHandSize(), "P3 should have 1 card");
 
         game.addAdventureCards("Foe", "F15", 15, 1);
+        game.addAdventureCards("Weapon", "S10", 10, 6);
 
         String input = "y\n0\nQuit\n0\n0\nQuit\n2\n2\n\n";
         StringWriter output = new StringWriter();
@@ -1320,11 +1321,12 @@ class MainTest {
         game.addAdventureCards("Weapon", "E30", 30, 1);
         p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
+        game.addAdventureCards("Weapon", "S10", 10, 6);
         game.addAdventureCards("Weapon", "E30", 30, 1);
 
         assertEquals(0, p3.getShields(), "P3 should have 0 shields initially.");
 
-        String input = "y\n0\nquit\n0\n0\nquit\n1\n0\nquit\n1\n0\nquit\n\n";
+        String input = "y\n0\nquit\n0\n0\nquit\n1\n0\nquit\n1\n1\nquit\n\n";
         StringWriter output = new StringWriter();
         game.processQuest(new Scanner(input), new PrintWriter(output));
 
