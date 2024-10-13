@@ -9,6 +9,7 @@ public class Player {
     private int shields;
     private boolean isSponsor;
     private List<List<AdventureCard>> stages;
+    private List<AdventureCard> attack;
 
     public Player(int id){
         this.id = id;
@@ -16,6 +17,7 @@ public class Player {
         this.shields = 0;
         this.isSponsor = false;
         stages = new ArrayList<>();
+        attack = new ArrayList<>();
     }
 
     public int getId(){
@@ -40,6 +42,11 @@ public class Player {
 
     public void setAsSponsor(){
         isSponsor = true;
+    }
+
+    public List<AdventureCard> buildAttack(Scanner input, PrintWriter output){
+
+        return attack;
     }
 
     public void sponsorCard(Scanner input, PrintWriter output, EventCard eventCard){

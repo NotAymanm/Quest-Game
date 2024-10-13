@@ -1116,4 +1116,35 @@ class MainTest {
         assertNotNull(game.getCurrentEvent(), "Quest should NOT end as there are participants left");
     }
 
+    @Test
+    @DisplayName("Test game displays player's hand and prompts for card input or 'Quit'")
+    void RESP_31_test_01(){
+        Main game = new Main();
+        game.initPlayers();
+        game.setCurrentEvent(new EventCard("Q2", "Quest"));
+
+        Player sponsor = game.getCurrentPlayer();
+        game.addAdventureCards("Weapon", "D5", 5, 1);
+        game.addAdventureCards("Foe", "F10", 10, 2);
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
+        sponsor.setAsSponsor();
+
+        String input = "y\n0\nQuit\n0\n0\nQuit";
+        StringWriter output = new StringWriter();
+        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+
+        Player p3 = game.getPlayer(2);
+        game.addAdventureCards("Weapon", "B15", 15, 1);
+        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        input = "0\nQuit";
+        p3.buildAttack(new Scanner(input), new PrintWriter(output));
+
+        assertTrue(output.toString().contains("P3's hand: [B15]"),
+                "Should display participant's hand");
+
+        assertTrue(output.toString().contains("Which card would you like to include in your attack? (Enter Index), or 'Quit' to stop:"),
+                "The game should prompt for a card position or 'Quit'.");
+    }
+
 }
