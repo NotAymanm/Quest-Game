@@ -276,17 +276,17 @@ public class Player {
         }
     }
 
-    public void drawAdventureCards(int count, List<AdventureCard> adventureDeck, List<AdventureCard> adventureDiscardPle){
-        takeAdventureCards(count, adventureDeck, adventureDiscardPle);
+    public void drawAdventureCards(int count, List<AdventureCard> adventureDeck, List<AdventureCard> adventureDiscardPile){
+        takeAdventureCards(count, adventureDeck, adventureDiscardPile);
 
         if(numCardsToDiscard() > 0){
             Scanner input = new Scanner(System.in);
             PrintWriter output = new PrintWriter(System.out);
-            discardCards(input,output);
+            discardCards(input,output, adventureDiscardPile);
         }
     }
 
-    public void discardCards(Scanner input, PrintWriter output){
+    public void discardCards(Scanner input, PrintWriter output, List<AdventureCard> adventureDiscardPile){
         output.println("P" + getId() + "'s current Hand: "); output.flush();
         printList(hand, output);
 
@@ -299,6 +299,7 @@ public class Player {
 
                 if(index >= 0 && index < getHandSize()){
                     AdventureCard card = getHand().remove(index);
+                    adventureDiscardPile.add(card);
                     output.println(card.getName() + " has been removed."); output.flush();
                     output.println("P" + getId() + "'s updated Hand: "); output.flush();
                     printList(getHand(), output);

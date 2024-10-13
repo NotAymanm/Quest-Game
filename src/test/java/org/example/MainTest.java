@@ -519,7 +519,7 @@ class MainTest {
 
         String input = "1";
         StringWriter output = new StringWriter();
-        currentPlayer.discardCards(new Scanner(input), new PrintWriter(output));
+        currentPlayer.discardCards(new Scanner(input), new PrintWriter(output), game.getAdventureDiscardPile());
 
         assertTrue(output.toString().contains("[F5, F10, F15, F15, F15, S10, S10, S10, S10, S10, H10, H10, H10, H10, H10]"), "Player's hand should be displayed");
         assertTrue(output.toString().contains("Which card you like to discard"), "Game should prompt players to discard a card");
@@ -546,7 +546,7 @@ class MainTest {
 
         String input = "15";
         StringWriter output = new StringWriter();
-        currentPlayer.discardCards(new Scanner(input), new PrintWriter(output));
+        currentPlayer.discardCards(new Scanner(input), new PrintWriter(output), game.getAdventureDiscardPile());
 
         assertTrue(output.toString().contains("Please Enter a Valid Position!"), "Position should be invalid");
 
@@ -572,7 +572,7 @@ class MainTest {
 
         String input = "14";
         StringWriter output = new StringWriter();
-        currentPlayer.discardCards(new Scanner(input), new PrintWriter(output));
+        currentPlayer.discardCards(new Scanner(input), new PrintWriter(output), game.getAdventureDiscardPile());
 
         assertTrue(output.toString().contains("H10 has been removed."), "Position should be valid");
 
@@ -600,7 +600,7 @@ class MainTest {
 
         String input = "14";
         StringWriter output = new StringWriter();
-        currentPlayer.discardCards(new Scanner(input), new PrintWriter(output));
+        currentPlayer.discardCards(new Scanner(input), new PrintWriter(output), game.getAdventureDiscardPile());
 
         assertTrue(output.toString().contains("[F5, F10, F15, F15, F15, S10, S10, S10, S10, S10, H10, H10, H10, H10]"), "Should display updated hand after discard.");
 
@@ -1267,6 +1267,41 @@ class MainTest {
         game.resolveAttacks(participants, new Scanner(input), new PrintWriter(output));
 
         assertTrue(output.toString().contains("P3's Attack failed!"),
+                "P3's attack should have been Unsuccessful.");
+    }
+
+    @Test
+    @DisplayName("Tests game discards cards used for attack")
+    void RESP_35_test_01(){
+        Main game = new Main();
+        game.initPlayers();
+
+        game.setCurrentEvent(new EventCard("Q2", "Quest"));
+        Player sponsor = game.getCurrentPlayer();
+        game.addAdventureCards("Weapon", "D5", 5, 1);
+        game.addAdventureCards("Foe", "F10", 10, 2);
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        String input = "y";
+        StringWriter output = new StringWriter();
+        game.findSponsor(new Scanner(input), new PrintWriter(output));
+
+        input = "0\nQuit\n0\n0\nQuit";
+        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+
+        Player p3 = game.getPlayer(2);
+        game.addAdventureCards("Weapon", "D5", 5, 2);
+        p3.takeAdventureCards(2, game.getAdventureDeck(), game.getAdventureDiscardPile());
+
+        List<Player> participants = new ArrayList<>();
+        participants.add(p3);
+
+        input = "0\nQuit";
+        game.resolveAttacks(participants, new Scanner(input), new PrintWriter(output));
+
+        assertFalse(game.getAdventureDiscardPile().isEmpty(), "Discard Pile should not be empty");
+
+        assertTrue(game.getAdventureDiscardPile().getLast().getName().equals("D5"),
                 "P3's attack should have been Unsuccessful.");
     }
 
