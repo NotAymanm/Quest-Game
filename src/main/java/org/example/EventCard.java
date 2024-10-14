@@ -17,6 +17,7 @@ public class EventCard {
         return type;
     }
 
+    @Override
     public String toString(){
         return name;
     }

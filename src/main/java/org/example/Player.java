@@ -297,6 +297,13 @@ public class Player {
             discardCards(input,output, adventureDiscardPile);
         }
     }
+    public void drawAdventureCards(int count, List<AdventureCard> adventureDeck, List<AdventureCard> adventureDiscardPile, Scanner input, PrintWriter output){
+        takeAdventureCards(count, adventureDeck, adventureDiscardPile);
+
+        if(numCardsToDiscard() > 0){
+            discardCards(input,output, adventureDiscardPile);
+        }
+    }
 
     public void discardCards(Scanner input, PrintWriter output, List<AdventureCard> adventureDiscardPile){
         output.println("P" + getId() + "'s current Hand: "); output.flush();
@@ -377,6 +384,7 @@ public class Player {
         output.println("]"); output.flush();
     }
 
+    @Override
     public String toString(){
         return "P" + id;
     }

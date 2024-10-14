@@ -24,6 +24,7 @@ public class AdventureCard {
         return value;
     }
 
+    @Override
     public String toString(){
         return name;
     }

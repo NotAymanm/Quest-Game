@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.StringWriter;
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 class MainTest {
 
@@ -1371,6 +1372,222 @@ class MainTest {
 
         assertEquals(5, game.getPlayer(0).getHandSize(), "Sponsor should have 5 cards");
 
+    }
+
+    @Test
+    @DisplayName("Compulsory scenario")
+    void A_TEST_JP_Scenario(){
+        Main game = new Main();
+
+        String input = "";
+        StringWriter output = new StringWriter();
+
+        //Decks are created
+        game.setUpDecks();
+        game.initPlayers();
+        //hands of the 4 players are set up with random cards
+        game.distributeAdventureCards();
+
+        Player p1 = game.getPlayer(0);
+        Player p2 = game.getPlayer(1);
+        Player p3 = game.getPlayer(2);
+        Player p4 = game.getPlayer(3);
+
+        //Rig cards
+        List<String> p1Cards = Arrays.asList("F5", "F5", "F15", "F15", "D5", "S10", "S10", "H10", "H10", "B15", "B15", "L20");
+        rigAdventureCards(p1, game.getAdventureDeck(), p1Cards);
+        List<String> p2Cards = Arrays.asList("F5", "F5", "F15", "F15", "F40", "D5", "S10", "H10", "H10", "B15", "B15", "E30");
+        rigAdventureCards(p2, game.getAdventureDeck(), p2Cards);
+        List<String> p3Cards = Arrays.asList("F5", "F5", "F5", "F15", "D5", "S10", "S10", "S10", "H10", "H10", "B15", "L20");
+        rigAdventureCards(p3, game.getAdventureDeck(), p3Cards);
+        List<String> p4Cards = Arrays.asList("F5", "F15", "F15", "F40", "D5", "D5", "S10", "H10", "H10", "B15", "L20", "E30");
+        rigAdventureCards(p4, game.getAdventureDeck(), p4Cards);
+
+        //Rigs event
+        EventCard riggedEventCard = rigEventCard(game.getEventDeck(), game.getEventDiscardPile(), "Q4");
+        game.setCurrentEvent(riggedEventCard);
+
+        //P1 declines
+        input = "n\n";
+        //P2 accepts
+        input += "y\n";
+
+        Player sponsor = game.findSponsor(new Scanner(input), new PrintWriter(output));
+
+        //P2 builds Stage 1
+        input = "0\n6\nQuit\n";
+        //P2 builds Stage 2
+        input += "1\n4\nQuit\n";
+        //P2 builds Stage 3
+        input += "1\n2\n3\nQuit\n";
+        //P2 builds Stage 4
+        input += "1\n2\nQuit\n";
+
+        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+
+        List<Player> eligibleParticipants = game.determineEligibleParticipants(new PrintWriter(output), 0, game.getPlayers());
+
+        //P1 decides to participate in Stage 1
+        input = "1\n";
+        //P3 decides to participate in Stage 1
+        input += "1\n";
+        //P4 decides to participate in Stage 1
+        input += "1\n";
+
+        List<Player> participants = game.promptParticipantsContinue(eligibleParticipants, new Scanner(input), new PrintWriter(output));
+
+        //P1 discards an F5
+        input = "0\n";
+        //P3 discards an F5
+        input += "0\n";
+        //P4 discards an F5
+        input += "0\n";
+
+        List<AdventureCard> riggedDraw  = new ArrayList<>();
+        riggedDraw.add(getSpecificAdventureCard(game.getAdventureDeck(), "F30"));
+        p1.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile(), new Scanner(input), new PrintWriter(output));
+        riggedDraw.add(getSpecificAdventureCard(game.getAdventureDeck(), "S10"));
+        p3.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile(), new Scanner(input), new PrintWriter(output));
+        riggedDraw.add(getSpecificAdventureCard(game.getAdventureDeck(), "B15"));
+        p4.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile(), new Scanner(input), new PrintWriter(output));
+
+        //P1 builds their attack
+        input = "4\n4\nQuit\n";
+        //P3 builds their attack
+        input += "4\n3\nQuit\n";
+        //P4 builds their attack
+        input += "3\n5\nQuit\n";
+
+        List<Player> stage1Winners = game.resolveAttacks(participants, new Scanner(input), new PrintWriter(output), 0);
+        List<Player> eligibleStage2 = game.determineEligibleParticipants(new PrintWriter(output), 1, stage1Winners);
+
+        //P1 decides to participate in Stage 2
+        input = "1\n";
+        //P3 decides to participate in Stage 2
+        input += "1\n";
+        //P4 decides to participate in Stage 2
+        input += "1\n";
+
+        List<Player> participantsStage2 = game.promptParticipantsContinue(eligibleStage2, new Scanner(input), new PrintWriter(output));
+
+        riggedDraw.add(getSpecificAdventureCard(game.getAdventureDeck(), "F10"));
+        p1.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile(), new Scanner(input), new PrintWriter(output));
+        riggedDraw.add(getSpecificAdventureCard(game.getAdventureDeck(), "L20"));
+        p3.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile(), new Scanner(input), new PrintWriter(output));
+        riggedDraw.add(getSpecificAdventureCard(game.getAdventureDeck(), "L20"));
+        p4.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile(), new Scanner(input), new PrintWriter(output));
+
+        //P1 builds their attack
+        input = "6\n5\nQuit\n";
+        //P3 builds their attack
+        input += "8\n3\nQuit\n";
+        //P4 builds their attack
+        input += "5\n5\nQuit\n";
+
+        List<Player> stage2Winners = game.resolveAttacks(participantsStage2, new Scanner(input), new PrintWriter(output), 1);
+
+        List<String> p1CorrectHand = Arrays.asList("F5", "F10", "F15", "F15", "F30", "H10", "B15", "B15", "L20");
+        List<String> p1Hand = p1.getHand().stream().map(AdventureCard::toString).collect(Collectors.toList());
+        assertEquals(p1CorrectHand, p1Hand, "P1's hand after losing stage 2 is incorrect.");
+        assertEquals(0, p1.getShields(), "P1 should have no shields after losing Stage 2.");
+
+        List<Player> eligibleStage3 = game.determineEligibleParticipants(new PrintWriter(output), 2, stage2Winners);
+
+        //P3 decides to participate in Stage 3
+        input = "1\n";
+        //P4 decides to participate in Stage 3
+        input += "1\n";
+
+        List<Player> participantsStage3 = game.promptParticipantsContinue(eligibleStage3, new Scanner(input), new PrintWriter(output));
+
+        riggedDraw.add(getSpecificAdventureCard(game.getAdventureDeck(), "B15"));
+        p3.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile(), new Scanner(input), new PrintWriter(output));
+        riggedDraw.add(getSpecificAdventureCard(game.getAdventureDeck(), "S10"));
+        p4.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile(), new Scanner(input), new PrintWriter(output));
+
+        //P3 builds their attack
+        input = "8\n5\n3\nQuit\n";
+        //P4 builds their attack
+        input += "6\n4\n5\nQuit\n";
+
+        List<Player> stage3Winners = game.resolveAttacks(participantsStage3, new Scanner(input), new PrintWriter(output), 2);
+        List<Player> eligibleStage4 = game.determineEligibleParticipants(new PrintWriter(output), 3, stage3Winners);
+
+        //P3 decides to participate in Stage 4
+        input = "1\n";
+        //P4 decides to participate in Stage 4
+        input += "1\n";
+
+        List<Player> participantsStage4 = game.promptParticipantsContinue(eligibleStage4, new Scanner(input), new PrintWriter(output));
+
+        riggedDraw.add(getSpecificAdventureCard(game.getAdventureDeck(), "F30"));
+        p3.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile(), new Scanner(input), new PrintWriter(output));
+        riggedDraw.add(getSpecificAdventureCard(game.getAdventureDeck(), "L20"));
+        p4.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile(), new Scanner(input), new PrintWriter(output));
+
+        //P3 builds their attack
+        input = "6\n5\n5\nQuit\n";
+        //P4 builds their attack
+        input += "3\n3\n3\n4\nQuit\n";
+
+        List<Player> stage4Winners = game.resolveAttacks(participantsStage4, new Scanner(input), new PrintWriter(output), 3);
+
+        int numStages = Character.getNumericValue(game.getCurrentEvent().getName().charAt(1));
+        game.payWinners(stage4Winners, numStages);
+
+        List<String> p3CorrectHand = Arrays.asList("F5", "F5", "F15", "F30", "S10");
+        List<String> p3Hand = p3.getHand().stream().map(AdventureCard::toString).collect(Collectors.toList());
+        assertEquals(p3CorrectHand, p3Hand, "P3's hand after losing stage 4 is incorrect.");
+        assertEquals(0, p3.getShields(), "P3 should have no shields after losing Stage 4.");
+
+        List<String> p4CorrectHand = Arrays.asList("F15", "F15", "F40", "L20");
+        List<String> p4Hand = p4.getHand().stream().map(AdventureCard::toString).collect(Collectors.toList());
+        assertEquals(p4CorrectHand, p4Hand, "P4's hand after winning stage 4 is incorrect.");
+        assertEquals(4, p4.getShields(), "P4 should have 4 shields after winning Stage 4.");
+
+
+        game.setGameOver();
+        input = "0\n0\n0\n0\n\n";
+        game.endQuest(new Scanner(input), new PrintWriter(output));
+
+        assertEquals(12, p2.getHandSize(), "P2 should have 12 cards in hand");
+    }
+
+    void rigAdventureCards(Player player, List<AdventureCard> adventureDeck, List<String> riggedCards){
+        //Puts the cards back into the deck
+        List<AdventureCard> hand = player.getHand();
+        adventureDeck.addAll(hand);
+        hand.clear();
+
+        //rigs the cards
+        for(String card : riggedCards){
+            AdventureCard riggedCardFound = getSpecificAdventureCard(adventureDeck, card);
+            if(riggedCardFound != null){
+                player.getHand().add(riggedCardFound);
+            }
+        }
+    }
+
+    AdventureCard getSpecificAdventureCard(List<AdventureCard> adventureDeck, String cardName) {
+        for (AdventureCard card : adventureDeck) {
+            if (card.getName().equals(cardName)) {
+                adventureDeck.remove(card);
+                return card;
+            }
+        }
+        return null;
+
+    }
+
+    EventCard rigEventCard(List<EventCard> eventDeck, List<EventCard> eventDiscardPile, String cardName){
+        for (EventCard card : eventDeck) {
+            if (card.getName().equals(cardName)) {
+                eventDeck.remove(card);
+                eventDiscardPile.add(card);
+                return card;
+            }
+        }
+        return null;
     }
 
 }

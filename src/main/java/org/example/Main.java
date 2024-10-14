@@ -86,6 +86,8 @@ public class Main {
         return eventDeck;
     }
 
+    public List<EventCard> getEventDiscardPile() {return eventDiscardPile;}
+
     public List<Player> getPlayers(){
         return players;
     }
@@ -194,6 +196,10 @@ public class Main {
         }
     }
 
+    public void setGameOver(){
+        gameOver = true;
+    }
+
     public boolean isGameOver(){
         return gameOver;
     }
@@ -222,6 +228,8 @@ public class Main {
                 player.drawAdventureCards(2, adventureDeck, adventureDiscardPile);
             }
         }
+
+        currentEvent = null;
     }
 
     public void startTurn(PrintWriter output){
@@ -250,7 +258,7 @@ public class Main {
         }
     }
 
-    public void findSponsor(Scanner input, PrintWriter output){
+    public Player findSponsor(Scanner input, PrintWriter output){
         int i = 0;
         while(questSponsor == null && i != players.size()){
             Player p = getPlayer((currentPlayerIndex + i) % players.size());
@@ -261,13 +269,14 @@ public class Main {
             }
             i++;
         }
-        if(questSponsor != null) return;
+        if(questSponsor != null) return questSponsor;
 
         output.println("All players have declined to sponsor the quest."); output.flush();
         currentEvent = null;
         output.println("The quest has been discarded."); output.flush();
 
         nextTurn(input, output);
+        return null;
     }
 
     public List<Player> determineEligibleParticipants(PrintWriter output, int stage, List<Player> participantsCheck){
@@ -403,9 +412,7 @@ public class Main {
 
         output.println("The quest has ended."); output.flush();
 
-        for(Player questWinner : participantsCheck){
-            questWinner.addShields(numStages);
-        }
+        payWinners(participantsCheck, numStages);
 
         endQuest(input, output);
     }
@@ -413,14 +420,14 @@ public class Main {
     public void endQuest(Scanner input, PrintWriter output){
         List<List<AdventureCard>> stages = questSponsor.getStages();
 
-        int numCards = numCardsSonsored(stages) + stages.size();
+        int numCards = numCardsSponsored(stages) + stages.size();
 
         for(List<AdventureCard> stage : stages){
             adventureDiscardPile.addAll(stage);
         }
         questSponsor.clearStages();
 
-        questSponsor.drawAdventureCards(numCards, adventureDeck, adventureDiscardPile);
+        questSponsor.drawAdventureCards(numCards, adventureDeck, adventureDiscardPile, input, output);
 
         currentEvent = null;
         questSponsor.removeSponsor();
@@ -429,7 +436,13 @@ public class Main {
         nextTurn(input, output);
     }
 
-    public int numCardsSonsored(List<List<AdventureCard>> stages){
+    public void payWinners(List<Player> winners, int numStages){
+        for(Player questWinner : winners){
+            questWinner.addShields(numStages);
+        }
+    }
+
+    public int numCardsSponsored(List<List<AdventureCard>> stages){
         int numCards = 0;
         for(List<AdventureCard> stage : stages){
             numCards += stage.size();
