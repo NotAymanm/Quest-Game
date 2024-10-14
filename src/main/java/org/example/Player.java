@@ -277,19 +277,22 @@ public class Player {
         sortHand();
     }
 
-    public void takeAdventureCards(int count, List<AdventureCard> adventureDeck, List<AdventureCard> adventureDiscardPile){
+    public void takeAdventureCards(int count, List<AdventureCard> adventureDeck, List<AdventureCard> adventureDiscardPile, PrintWriter output){
         for(int i = 0; i < count; i++){
             if(adventureDeck.isEmpty()){
                 adventureDeck.addAll(adventureDiscardPile);
                 adventureDiscardPile.clear();
                 Collections.shuffle(adventureDeck);
             }
-            takeAdventureCard(adventureDeck.removeLast());
+            AdventureCard drawnCard = adventureDeck.removeLast();
+            takeAdventureCard(drawnCard);
+
+            if(output != null) output.println(this + " drew a: " + drawnCard.getName());
         }
     }
 
     public void drawAdventureCards(int count, List<AdventureCard> adventureDeck, List<AdventureCard> adventureDiscardPile){
-        takeAdventureCards(count, adventureDeck, adventureDiscardPile);
+        takeAdventureCards(count, adventureDeck, adventureDiscardPile, null);
 
         if(numCardsToDiscard() > 0){
             Scanner input = new Scanner(System.in);
@@ -298,18 +301,20 @@ public class Player {
         }
     }
     public void drawAdventureCards(int count, List<AdventureCard> adventureDeck, List<AdventureCard> adventureDiscardPile, Scanner input, PrintWriter output){
-        takeAdventureCards(count, adventureDeck, adventureDiscardPile);
+        takeAdventureCards(count, adventureDeck, adventureDiscardPile, output);
 
         if(numCardsToDiscard() > 0){
             discardCards(input,output, adventureDiscardPile);
+            clearHotseat(output);
         }
     }
 
     public void discardCards(Scanner input, PrintWriter output, List<AdventureCard> adventureDiscardPile){
-        output.println("P" + getId() + "'s current Hand: "); output.flush();
+        output.print("P" + getId() + "'s current Hand: "); output.flush();
         printList(hand, output);
 
         while(numCardsToDiscard() > 0){
+            output.println(this + " is holding too many cards.");
             output.println("Which card you like to discard (Enter Index): "); output.flush();
 
             if(input.hasNextLine()){
@@ -320,7 +325,7 @@ public class Player {
                     AdventureCard card = getHand().remove(index);
                     adventureDiscardPile.add(card);
                     output.println(card.getName() + " has been removed."); output.flush();
-                    output.println("P" + getId() + "'s updated Hand: "); output.flush();
+                    output.print("P" + getId() + "'s updated Hand: "); output.flush();
                     printList(getHand(), output);
                 }
                 else{
@@ -382,6 +387,12 @@ public class Player {
             }
         }
         output.println("]"); output.flush();
+    }
+
+    public void clearHotseat(PrintWriter output){
+        for(int i = 0; i < 15; i++){
+            output.print("\n"); output.flush();
+        }
     }
 
     @Override

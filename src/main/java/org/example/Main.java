@@ -25,16 +25,14 @@ public class Main {
         Main game = new Main();
         game.setUpDecks();
         game.initPlayers();
-        game.distributeAdventureCards();
-
         Scanner input = new Scanner(System.in);
         PrintWriter output = new PrintWriter(System.out);
+        game.distributeAdventureCards();
 
-        game.displayWinners(output);
-
-        game.drawNextEventCard(output);
-
-        game.findSponsor(input, output);
+        game.startTurn(output);
+        while(!game.gameOver){
+            game.startGame(input, output);
+        }
 
     }
 
@@ -57,7 +55,7 @@ public class Main {
 
     public void distributeAdventureCards(){
         for(Player player: players){
-            player.drawAdventureCards(12, adventureDeck, adventureDiscardPile);
+            player.drawAdventureCards(12, adventureDeck, adventureDiscardPile, new Scanner(""), null);
         }
     }
 
@@ -212,24 +210,39 @@ public class Main {
         return questSponsor != null;
     }
 
-    public void processEvent(){
+    public void processEvent(Scanner input, PrintWriter output){
         if(currentEvent.getName().equals("Plague")){
             Player currentPlayer = getCurrentPlayer();
             currentPlayer.loseShields(2);
         }
         else if(currentEvent.getName().equals("Queen's Favor")){
             Player currentPlayer = getCurrentPlayer();
-            currentPlayer.drawAdventureCards(2, adventureDeck, adventureDiscardPile);
+            currentPlayer.drawAdventureCards(2, adventureDeck, adventureDiscardPile, input, output);
         }
         else if(currentEvent.getName().equals("Prosperity")){
             for(int i = 0; i < players.size(); i++){
                 //takes cards in order of current player
                 Player player = getPlayer((currentPlayerIndex + i) % players.size());
-                player.drawAdventureCards(2, adventureDeck, adventureDiscardPile);
+                player.drawAdventureCards(2, adventureDeck, adventureDiscardPile, input, output);
+                clearHotseat(output);
             }
         }
 
         currentEvent = null;
+    }
+
+    public void startGame(Scanner input, PrintWriter output){
+        drawNextEventCard(output);
+        output.println(); output.flush();
+        if(currentEvent.getType().equals("Event")){
+            output.println("Executing " + currentEvent.getName());
+            processEvent(input, output);
+            output.println("The quest card has been discarded."); output.flush();
+            nextTurn(input, output);
+        }
+        else if(currentEvent.getType().equals("Quest")){
+            processQuest(input, output);
+        }
     }
 
     public void startTurn(PrintWriter output){
@@ -263,9 +276,12 @@ public class Main {
         while(questSponsor == null && i != players.size()){
             Player p = getPlayer((currentPlayerIndex + i) % players.size());
             if(p.canSponsor(currentEvent)){
+                if(!p.equals(getCurrentPlayer())) clearHotseat(output);
+                output.println(currentEvent.getName() + " has Started."); output.flush();
                 if(p.sponsorQuest(input, output)){
                     questSponsor = p;
                 }
+                clearHotseat(output);
             }
             i++;
         }
@@ -283,13 +299,10 @@ public class Main {
         List<List<AdventureCard>> stages = questSponsor.getStages();
         List<Player> eligibleParticipants = new ArrayList<>();
 
-        int startIndex = (currentPlayerIndex) % participantsCheck.size();
 
-        for(int i = 0; i < participantsCheck.size(); i++){
+        for (Player player : participantsCheck) {
             //gets responses in order of current player
-            Player player = participantsCheck.get((startIndex + i) % participantsCheck.size());
-
-            if(!player.isSponsor()){
+            if (!player.isSponsor()) {
                 int totalWeaponValue = 0;
                 for(AdventureCard card : player.getHand()){
                     if(card.getType().equals("Weapon")){
@@ -307,10 +320,10 @@ public class Main {
         }
 
         if(eligibleParticipants.isEmpty()){
-            output.println("No eligible participants for the following stage."); output.flush();
+            output.println("No eligible participants for Stage "+ (stage+1)+"."); output.flush();
         }
         else{
-            output.print("Eligible participants for the following stage: "); output.flush();
+            output.print("Eligible participants for Stage "+ (stage+1)+ ": "); output.flush();
             printList(eligibleParticipants, output);
         }
 
@@ -347,10 +360,11 @@ public class Main {
         List<Player> eligibleParticipants = determineEligibleParticipants(output, stage, participantsCheck);
         List<Player> participants = promptParticipantsContinue(eligibleParticipants, input, output);
 
-        output.println("Stage " + (stage+1)+ " begins!"); output.flush();
+        if(!participants.isEmpty()) output.println("\n\nStage " + (stage+1)+ " begins!"); output.flush();
 
         for(Player player : participants){
-            player.drawAdventureCards(1, adventureDeck, adventureDiscardPile);
+            player.drawAdventureCards(1, adventureDeck, adventureDiscardPile, input, output);
+            clearHotseat(output);
         }
 
         return participants;
@@ -363,6 +377,7 @@ public class Main {
         List<Player> ineligibleParticipants = new ArrayList<>();
 
         for(Player player : participants){
+            clearHotseat(output);
             List<AdventureCard> attack = player.buildAttack(input, output);
             int attackValue = 0;
             for(AdventureCard card : attack){
@@ -398,7 +413,9 @@ public class Main {
 
         if(currentEvent == null) return;
 
+        clearHotseat(output);
         questSponsor.sponsorCard(input, output, currentEvent);
+        clearHotseat(output);
 
         int numStages = Character.getNumericValue(currentEvent.getName().charAt(1));
 
