@@ -53,8 +53,8 @@ public class GameSteps {
     }
 
 
-    @Given("the game starts with decks created and 4 players initialized")
-    public void setupGameWithDecksAndPlayers() {
+    @Given("the game starts with rigged deck for A1_scenario")
+    public void setupA1Scenario() {
         game.setUpDecks();
 
         List<EventCard> eventCards = Arrays.asList(
@@ -141,6 +141,121 @@ public class GameSteps {
         game.distributeAdventureCards();
     }
 
+    @Given("the game starts with rigged deck for 2winner_game_2winner_quest")
+    public void setup2winner_game_2winner_quest() {
+        game.setUpDecks();
+
+        List<EventCard> eventCards = Arrays.asList(
+                new EventCard("Q4", "Quest"),
+                new EventCard("Q3", "Quest")
+        );
+
+        List<AdventureCard> adventureCards = Arrays.asList(
+                //P1
+                new AdventureCard("Foe", "F5", 5),
+                new AdventureCard("Foe", "F5", 5),
+                new AdventureCard("Foe", "F10", 10),
+                new AdventureCard("Foe", "F10", 10),
+                new AdventureCard("Foe", "F15", 15),
+                new AdventureCard("Foe", "F20", 20),
+                new AdventureCard("Foe", "F30", 30),
+                new AdventureCard("Weapon", "D5", 5),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "B15", 15),
+
+                //P2
+                new AdventureCard("Foe", "F5", 5),
+                new AdventureCard("Foe", "F15", 15),
+                new AdventureCard("Foe", "F20", 20),
+                new AdventureCard("Foe", "F35", 35),
+                new AdventureCard("Weapon", "D5", 5),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "B15", 15),
+                new AdventureCard("Weapon", "B15", 15),
+                new AdventureCard("Weapon", "B15", 15),
+                new AdventureCard("Weapon", "L20", 20),
+
+                //P3
+                new AdventureCard("Foe", "F5", 5),
+                new AdventureCard("Foe", "F5", 5),
+                new AdventureCard("Foe", "F10", 10),
+                new AdventureCard("Foe", "F10", 10),
+                new AdventureCard("Foe", "F15", 15),
+                new AdventureCard("Foe", "F20", 20),
+                new AdventureCard("Weapon", "D5", 5),
+                new AdventureCard("Weapon", "D5", 5),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "H10", 10),
+
+                //P4
+                new AdventureCard("Foe", "F5", 5),
+                new AdventureCard("Foe", "F15", 15),
+                new AdventureCard("Foe", "F20", 20),
+                new AdventureCard("Foe", "F25", 25),
+                new AdventureCard("Foe", "F25", 25),
+                new AdventureCard("Weapon", "D5", 5),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "B15", 15),
+                new AdventureCard("Weapon", "L20", 20),
+
+                //Draws
+                //Stage 1
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Foe", "F40", 40),
+                new AdventureCard("Weapon", "L20", 20),
+                //Stage 2
+                new AdventureCard("Foe", "F10", 10),
+                new AdventureCard("Weapon", "H10", 10),
+                //Stage 3
+                new AdventureCard("Weapon", "D5", 5),
+                new AdventureCard("Foe", "F25", 25),
+                //Stage 4
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "E30", 30),
+
+                //P1 draws 10 cards
+                new AdventureCard("Foe", "F10", 10),
+                new AdventureCard("Foe", "F15", 15),
+                new AdventureCard("Foe", "F15", 15),
+                new AdventureCard("Foe", "F20", 20),
+                new AdventureCard("Foe", "F20", 20),
+                new AdventureCard("Foe", "F25", 25),
+                new AdventureCard("Foe", "F30", 30),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "S10", 10),
+
+                //Draws
+                //Stage 1
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "S10", 10),
+                //Stage 2
+                new AdventureCard("Foe", "F5", 5),
+                new AdventureCard("Weapon", "S10", 10),
+                //Stage 3
+                new AdventureCard("Weapon", "E30", 30),
+                new AdventureCard("Weapon", "L20", 20)
+        );
+
+
+        game.getDeck().rigAdventureDeck(adventureCards);
+        game.getDeck().rigEventDeck(eventCards);
+
+        //System.out.println(game.getAdventureDeck().size());
+
+        game.initPlayers();
+        game.distributeAdventureCards();
+    }
+
     @And("player {int} has hand {string}")
     public void setPlayerHand(int playerId, String cardList) {
         Player player = game.getPlayer(playerId-1);
@@ -156,6 +271,7 @@ public class GameSteps {
         game.drawNextEventCard(new PrintWriter(output));
 
 //        assertEquals(event, game.getCurrentEvent().getName(), "Incorrect Event Card!");
+        input.setLength(0);
     }
 
     @And("player {int} is asked to sponsor and {string}")
@@ -227,8 +343,7 @@ public class GameSteps {
         input.setLength(0);
     }
 
-    @Then("player {int} participates in stage {int}")
-    public void playerParticipatesInStage(int playerId, int stageNum) {
+    private void questParticipation(int playerId, int stageNum, int decision){
         output = new StringWriter();
 
         Player player = game.getPlayer(playerId-1);
@@ -245,10 +360,10 @@ public class GameSteps {
         }
 
         //Participates
-        if(eligibleParticipants.contains(player)){
+        if(eligibleParticipants.contains(player) && decision == 1){
             input.append("1\n");
         }
-        else{
+        else if(eligibleParticipants.contains(player) && decision == 0){
             input.append("0\n");
         }
 
@@ -257,13 +372,24 @@ public class GameSteps {
             List<Player> participants = game.promptParticipantsContinue(eligibleParticipants, new Scanner(input.toString()), new PrintWriter(output));
             stageEligibleParticipants.put(stageNum, participants);
 
-            for (Player correctParticipant : playersConnect) {
-                assertTrue(output.toString().contains(correctParticipant.toString() + " will tackle the stage."));
+            for (Player participant : participants) {
+                assertTrue(output.toString().contains(participant.toString() + " will tackle the stage."),
+                        "Player " + participant.getId() + " should be tackling the stage.");
             }
 
             playersConnect.clear();
             input.setLength(0);
         }
+    }
+
+    @Then("player {int} participates in stage {int}")
+    public void playerParticipatesInStage(int playerId, int stageNum) {
+        questParticipation(playerId, stageNum, 1);
+    }
+
+    @And("player {int} doesn't participate in stage {int} and the rest of the quest")
+    public void playerDeclinesParticipation(int playerId, int stageNum){
+        questParticipation(playerId, stageNum, 0);
     }
 
     @And("player {int} draws {string} and discards {string}")
@@ -343,9 +469,14 @@ public class GameSteps {
                 "Player " + playerId + " should be out of the quest!");
     }
 
-    @And("player(s) {string} wins with {int} shields and hand as {string}")
-    public void playerWins(String playersId, int numShields, String hand) {
+    @And("player(s) {string} win(s) the quest, gain(s) {int} shields and has hand(s) as {string}")
+    public void playerWinsQuest(String playersId, int numShields, String hand) {
         List<Player> winners = stageEligibleParticipants.get(stageEligibleParticipants.size());
+        List<Integer> winnersNumShield = new ArrayList<>();
+        for(Player winner : winners){
+            winnersNumShield.add(winner.getShields());
+        }
+
         game.payWinners(winners, numShields);
 
         List<List<String>> winnersHands = StringTo2DList(hand);
@@ -358,10 +489,10 @@ public class GameSteps {
 
             List<String> playerHand = player.getHand().stream().map(AdventureCard::toString).toList();
             assertEquals(winnersHands.get(i), playerHand,
-                    "Player " + i + "'s hand is incorrect!");
+                    "Player " + player.getId() + "'s hand is incorrect!");
 
-            assertEquals(numShields, player.getShields(),
-                    "Player " + i + " should have " + numShields + " shields!");
+            assertEquals(winnersNumShield.get(i) + numShields, player.getShields(),
+                    "Player " + player.getId() + " should have " + numShields + " shields!");
         }
     }
 
@@ -387,4 +518,19 @@ public class GameSteps {
                 "Player "+ sponsor.getId() +" should have " + numCardsAfterDiscard + " cards in hand!");
     }
 
+    @And("player(s) {string} won the game")
+    public void playersWonTheGame(String playerIdWinners) {
+        //Clears previous input and output
+        output = new StringWriter();
+        input.setLength(0);
+
+        game.displayWinners(new PrintWriter(output));
+
+        List<Integer> winnersId = Arrays.stream(playerIdWinners.split(", ")).map(Integer::parseInt).toList();
+
+        for(Integer playerId : winnersId){
+            assertTrue(output.toString().contains("Winner: P" + playerId),
+                    "Player " + playerId + "Should be displayed as A Winner!");
+        }
+    }
 }
