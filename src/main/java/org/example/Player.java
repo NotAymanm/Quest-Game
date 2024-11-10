@@ -304,7 +304,7 @@ public class Player {
         takeAdventureCards(count, adventureDeck, adventureDiscardPile, output);
 
         if(numCardsToDiscard() > 0){
-            discardCards(input,output, adventureDiscardPile);
+            discardCards(input, output, adventureDiscardPile);
             clearHotseat(output);
         }
     }

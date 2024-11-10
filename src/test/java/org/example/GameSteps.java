@@ -256,6 +256,145 @@ public class GameSteps {
         game.distributeAdventureCards();
     }
 
+    @Given("the game starts with rigged deck for 1winner_game_with_events")
+    public void setup1winner_game_with_events() {
+        game.setUpDecks();
+
+        List<EventCard> eventCards = Arrays.asList(
+                new EventCard("Q4", "Quest"),
+                new EventCard("Plague", "Event"),
+                new EventCard("Prosperity", "Event"),
+                new EventCard("Queen's Favor", "Event"),
+                new EventCard("Q3", "Quest")
+        );
+
+        List<AdventureCard> adventureCards = Arrays.asList(
+                //P1
+                new AdventureCard("Foe", "F5", 5),
+                new AdventureCard("Foe", "F5", 5),
+                new AdventureCard("Foe", "F10", 10),
+                new AdventureCard("Foe", "F10", 10),
+                new AdventureCard("Foe", "F15", 15),
+                new AdventureCard("Foe", "F25", 25),
+                new AdventureCard("Foe", "F40", 40),
+                new AdventureCard("Weapon", "D5", 5),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "B15", 15),
+
+                //P2
+                new AdventureCard("Foe", "F5", 5),
+                new AdventureCard("Foe", "F15", 15),
+                new AdventureCard("Foe", "F20", 20),
+                new AdventureCard("Weapon", "D5", 5),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "B15", 15),
+                new AdventureCard("Weapon", "L20", 20),
+                new AdventureCard("Weapon", "E30", 30),
+
+                //P3
+                new AdventureCard("Foe", "F5", 5),
+                new AdventureCard("Foe", "F15", 15),
+                new AdventureCard("Foe", "F15", 15),
+                new AdventureCard("Foe", "F25", 25),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "B15", 15),
+                new AdventureCard("Weapon", "B15", 15),
+                new AdventureCard("Weapon", "L20", 20),
+
+                //P4
+                new AdventureCard("Foe", "F5", 5),
+                new AdventureCard("Foe", "F20", 20),
+                new AdventureCard("Foe", "F20", 20),
+                new AdventureCard("Foe", "F25", 25),
+                new AdventureCard("Foe", "F30", 30),
+                new AdventureCard("Foe", "F40", 40),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "B15", 15),
+                new AdventureCard("Weapon", "B15", 15),
+                new AdventureCard("Weapon", "B15", 15),
+                new AdventureCard("Weapon", "L20", 20),
+
+                //Draws
+                //Stage 1
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "L20", 20),
+                new AdventureCard("Weapon", "D5", 5),
+                //Stage 2
+                new AdventureCard("Foe", "F10", 10),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "S10", 10),
+                //Stage 3
+                new AdventureCard("Foe", "F20", 20),
+                new AdventureCard("Weapon", "D5", 5),
+                new AdventureCard("Foe", "F15", 15),
+                //Stage 4
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "L20", 20),
+                new AdventureCard("Weapon", "D5", 5),
+
+                //P1 draws 9 cards
+                new AdventureCard("Foe", "F5", 5),
+                new AdventureCard("Foe", "F10", 10),
+                new AdventureCard("Foe", "F10", 10),
+                new AdventureCard("Foe", "F15", 15),
+                new AdventureCard("Foe", "F20", 20),
+                new AdventureCard("Foe", "F25", 25),
+                new AdventureCard("Foe", "F25", 25),
+                new AdventureCard("Foe", "F30", 30),
+                new AdventureCard("Foe", "F35", 35),
+
+                //Prosperity Draws
+                //P3
+                new AdventureCard("Weapon", "E30", 30),
+                new AdventureCard("Weapon", "D5", 5),
+                //P4
+                new AdventureCard("Foe", "F10", 10),
+                new AdventureCard("Foe", "F5", 5),
+                //P1
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "B15", 15),
+                //P2
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "L20", 20),
+
+                //Queen's Favor
+                new AdventureCard("Foe", "F20", 20),
+                new AdventureCard("Weapon", "H10", 10),
+
+                //Draws
+                //Stage 1
+                new AdventureCard("Weapon", "D5", 5),
+                new AdventureCard("Foe", "F10", 10),
+                new AdventureCard("Foe", "F35", 35),
+                //Stage 2
+                new AdventureCard("Foe", "F5", 5),
+                new AdventureCard("Foe", "F35", 35),
+                //Stage 3
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Foe", "F50", 50)
+        );
+
+
+        game.getDeck().rigAdventureDeck(adventureCards);
+        game.getDeck().rigEventDeck(eventCards);
+
+        //System.out.println(game.getAdventureDeck().size());
+
+        game.initPlayers();
+        game.distributeAdventureCards();
+    }
+
     @And("player {int} has hand {string}")
     public void setPlayerHand(int playerId, String cardList) {
         Player player = game.getPlayer(playerId-1);
@@ -528,9 +667,127 @@ public class GameSteps {
 
         List<Integer> winnersId = Arrays.stream(playerIdWinners.split(", ")).map(Integer::parseInt).toList();
 
-        for(Integer playerId : winnersId){
-            assertTrue(output.toString().contains("Winner: P" + playerId),
-                    "Player " + playerId + "Should be displayed as A Winner!");
+        for(int i = 0; i < game.getPlayers().size(); i++){
+            Player player = game.getPlayer(i);
+            if(winnersId.contains(player.getId())){
+                assertTrue(output.toString().contains("Winner: P" + player.getId()),
+                        "Player " + player.getId() + " Should be displayed as A Winner!");
+            }
+            else{
+                assertFalse(output.toString().contains("Winner: P" + player.getId()),
+                        "Player " + player.getId() + " Should NOT be displayed as A Winner!");
+            }
         }
     }
+
+    private void playerDrawsEvent(String input){
+        output = new StringWriter();
+        game.drawNextEventCard(new PrintWriter(output));
+        game.processEvent(new Scanner(input), new PrintWriter(output));
+
+        game.nextTurn(new Scanner(input), new PrintWriter(output));
+    }
+
+    @And("player {int} draws a {string} event and loses {int} shields")
+    public void playerDrawsPlague(int playerId, String event, int numShields) {
+        Player player = game.getPlayer(playerId-1);
+        int playerShieldsBefore = player.getShields();
+
+        int correctShields =  Math.max(playerShieldsBefore - numShields, 0);
+
+        playerDrawsEvent("\n");
+
+        //asserts
+        assertEquals(correctShields, player.getShields(),
+                "Player " + playerId + " has the wrong number of shields!");
+
+    }
+
+    @And("player {int} draws a {string} event and all players draw {int} adventure cards")
+    public void playerDrawsProsperity(int playerId, String event, int numCards) {
+        List<Integer> playerHandSize = new ArrayList<>();
+        for(Player player : game.getPlayers()){
+            playerHandSize.add(Math.min(player.getHandSize() + numCards, 12));
+        }
+
+        playerDrawsEvent("\n");
+
+        //asserts
+        for(int i = 0; i < game.getPlayers().size(); i++){
+            assertEquals(playerHandSize.get(i), game.getPlayer(i).getHandSize(),
+                    "Player " + game.getPlayer(i).getId() + "'s hand size is incorrect!");
+        }
+    }
+
+    @And("player {int} draws a {string} event and all players draw {int} adventure cards, discarding {string} in order of players")
+    public void playerDrawsProsperity(int playerId, String event, int numCards, String discardCards) {
+        input.setLength(0);
+
+        List<Integer> playerHandSize = new ArrayList<>();
+        for(Player player : game.getPlayers()){
+            playerHandSize.add(Math.min(player.getHandSize() + numCards, 12));
+        }
+
+        List<List<String>> discardList = StringTo2DList(discardCards);
+        // Go through each stage and find the index of the card the player wants to use
+        for(int i = 0; i < discardList.size(); i++){
+            List<String> discard = discardList.get(i);
+
+            if((discard.size() == 1 && (discard.getFirst().isEmpty()))){ continue; }
+
+            Player player = game.getPlayer(((playerId-1) + i) % game.getPlayers().size());
+            List<AdventureCard> duplicateHand = new ArrayList<>(player.getHand());
+            for(String card : discard){
+                int index  = findCardIndexByName(duplicateHand, card);
+                input.append(index).append("\n");
+            }
+        }
+
+        input.append("\n");
+        playerDrawsEvent(input.toString());
+
+        //asserts
+        for(int i = 0; i < game.getPlayers().size(); i++){
+            assertEquals(playerHandSize.get(i), game.getPlayer(i).getHandSize(),
+                    "Player " + game.getPlayer(i).getId() + "'s hand size is incorrect!");
+        }
+
+    }
+
+    @And("player {int} draws a {string} event and draws {int} adventure cards")
+    public void playerDrawsQueensFavor(int playerId, String event, int numCards) {
+        Player player = game.getPlayer(playerId-1);
+        int correctHandSize = Math.min(player.getHandSize() + numCards, 12);
+
+        playerDrawsEvent("\n");
+
+        //asserts
+        assertEquals(correctHandSize, player.getHandSize(),
+                "Player " + playerId + "'s hand size is incorrect!");
+    }
+
+    @And("player {int} draws a {string} event and draws {int} adventure cards, discarding {string}")
+    public void playerDrawsQueensFavor(int playerId, String event, int numCards, String discardCards) {
+        input.setLength(0);
+        String[] cards = discardCards.split(", ");
+        Player player = game.getPlayer(playerId-1);
+
+        int correctHandSize = Math.min(player.getHandSize() + numCards, 12);
+
+        List<AdventureCard> duplicateHand = new ArrayList<>(player.getHand());
+        for(String card : cards){
+            int index  = findCardIndexByName(duplicateHand, card);
+            input.append(index).append("\n");
+        }
+
+        input.append("\n");
+        playerDrawsEvent(input.toString());
+
+        //asserts
+        assertEquals(correctHandSize, player.getHandSize(),
+                "Player " + playerId + "'s hand size is incorrect!");
+    }
+
+
+
 }
