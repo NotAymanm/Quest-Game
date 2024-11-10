@@ -394,6 +394,84 @@ public class GameSteps {
         game.initPlayers();
         game.distributeAdventureCards();
     }
+    @Given("the game starts with rigged deck for 0_winner_quest")
+    public void setup0_winner_quest() {
+        game.setUpDecks();
+
+        List<EventCard> eventCards = Arrays.asList(
+                new EventCard("Q2", "Quest")
+        );
+
+        List<AdventureCard> adventureCards = Arrays.asList(
+                //P1
+                new AdventureCard("Foe", "F10", 10),
+                new AdventureCard("Foe", "F10", 10),
+                new AdventureCard("Foe", "F25", 25),
+                new AdventureCard("Foe", "F35", 35),
+                new AdventureCard("Weapon", "D5", 5),
+                new AdventureCard("Weapon", "D5", 5),
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "B15", 15),
+                new AdventureCard("Weapon", "B15", 15),
+                new AdventureCard("Weapon", "L20", 20),
+                new AdventureCard("Weapon", "L20", 20),
+                new AdventureCard("Weapon", "E30", 30),
+
+                //P2
+                new AdventureCard("Foe", "F5", 5),
+                new AdventureCard("Foe", "F15", 15),
+                new AdventureCard("Foe", "F15", 15),
+                new AdventureCard("Foe", "F15", 15),
+                new AdventureCard("Foe", "F25", 25),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "B15", 15),
+                new AdventureCard("Weapon", "L20", 20),
+
+                //P3
+                new AdventureCard("Foe", "F5", 5),
+                new AdventureCard("Foe", "F10", 10),
+                new AdventureCard("Foe", "F15", 15),
+                new AdventureCard("Foe", "F20", 20),
+                new AdventureCard("Weapon", "D5", 5),
+                new AdventureCard("Weapon", "D5", 5),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "B15", 15),
+                new AdventureCard("Weapon", "B15", 15),
+
+                //P4
+                new AdventureCard("Foe", "F5", 5),
+                new AdventureCard("Foe", "F5", 5),
+                new AdventureCard("Foe", "F20", 20),
+                new AdventureCard("Foe", "F20", 20),
+                new AdventureCard("Foe", "F35", 35),
+                new AdventureCard("Weapon", "D5", 5),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Weapon", "E30", 30),
+
+                //Draws
+                new AdventureCard("Weapon", "S10", 10),
+                new AdventureCard("Weapon", "H10", 10),
+                new AdventureCard("Foe", "F40", 40)
+
+        );
+
+        game.getDeck().rigAdventureDeck(adventureCards);
+        game.getDeck().rigEventDeck(eventCards);
+
+        game.initPlayers();
+        game.distributeAdventureCards();
+    }
 
     @And("player {int} has hand {string}")
     public void setPlayerHand(int playerId, String cardList) {
@@ -540,19 +618,26 @@ public class GameSteps {
 
         int correctHandSize = player.getHandSize();
 
+        String[] cardsToDraw = drawnCards.split(", ");
+
         //DISCARD GIVEN CARDS if given
         if(!discardCards.isEmpty()) {
             String[] cardsToDiscard = discardCards.split(", ");
             correctHandSize -= cardsToDiscard.length;
             for (String card : cardsToDiscard) {
                 List<AdventureCard> duplicateHand = new ArrayList<>(player.getHand());
+                for(String draw : cardsToDraw){
+                    String type = (draw.charAt(0) == 'F') ? "Foe" : "Weapon";
+                    int value = Integer.parseInt(drawnCards.substring(1));
+                    duplicateHand.add(new AdventureCard(type, drawnCards, value));
+                    player.sortHand(duplicateHand);
+                }
                 int index = findCardIndexByName(duplicateHand, card);
                 input.append(index).append("\n");
             }
         }
 
         //Players draws cards
-        String[] cardsToDraw = drawnCards.split(", ");
         correctHandSize += cardsToDraw.length;
         player.drawAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile(), new Scanner(input.toString()), new PrintWriter(output));
 
@@ -655,6 +740,23 @@ public class GameSteps {
 
         assertEquals(numCardsAfterDiscard, sponsor.getHandSize(),
                 "Player "+ sponsor.getId() +" should have " + numCardsAfterDiscard + " cards in hand!");
+    }
+
+    @And("Quest ends with no winners and player {int} discards all quest cards and draws {int} cards, then trims to {int} cards")
+    public void sponsorUpdatesCardsNoWinner(int playerId, int numCardsDraw, int numCardsAfterDiscard) {
+        sponsorUpdatesCards(playerId, numCardsDraw, numCardsAfterDiscard);
+
+        //asserts quest has ended
+        assertNull(game.getCurrentEvent(), "There should not be any current event");
+        assertTrue(output.toString().contains("The quest card has been discarded."), "Quest card should be discarded");
+
+
+        //asserts no winners
+        for(int i = 0; i < game.getPlayers().size(); i++){
+            Player player = game.getPlayer(i);
+            assertFalse(output.toString().contains("Winner: P" + player.getId()),
+                    "Player " + player.getId() + " Should NOT be displayed as A Winner!");
+        }
     }
 
     @And("player(s) {string} won the game")
@@ -789,5 +891,18 @@ public class GameSteps {
     }
 
 
+    @And("player {int} has {int} shields and {int} cards")
+    public void playerHasShieldsAndCards(int playerId, int correctNumShields, int correctNumCards) {
+        Player player = game.getPlayer(playerId-1);
 
+        int numShields = player.getShields();
+        int numCards = player.getHandSize();
+
+        assertEquals(correctNumShields, numShields,
+                "Player " + playerId + " should have " + correctNumShields + " shields, but has " + numShields + " shields!");
+
+        assertEquals(correctNumCards, numCards,
+                "Player " + playerId + " should have " + correctNumCards + " cards, but has " + numCards + " cards!");
+
+    }
 }

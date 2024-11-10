@@ -274,7 +274,7 @@ public class Player {
 
     public void takeAdventureCard(AdventureCard card){
         hand.add(card);
-        sortHand();
+        sortHand(hand);
     }
 
     public void takeAdventureCards(int count, List<AdventureCard> adventureDeck, List<AdventureCard> adventureDiscardPile, PrintWriter output){
@@ -340,7 +340,7 @@ public class Player {
         }
     }
 
-    private void sortHand(){
+    public void sortHand(List<AdventureCard> hand){
         Collections.sort(hand, new Comparator<AdventureCard>() {
             @Override
             public int compare(AdventureCard card1, AdventureCard card2) {

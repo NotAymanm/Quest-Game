@@ -53,6 +53,11 @@ Feature: Game Acceptance Tests
     And player "4" wins the quest, gains 4 shields and has hand as "[F15, F15, F40, L20]"
     And player 2 discards all quest cards and draws 13 cards, then trims to 12 cards
 
+    And player 1 has 0 shields and 9 cards
+    And player 2 has 0 shields and 12 cards
+    And player 3 has 0 shields and 5 cards
+    And player 4 has 4 shields and 4 cards
+
 
 Scenario: 2winner_game_2winner_quest
   Given the game starts with rigged deck for 2winner_game_2winner_quest
@@ -133,7 +138,8 @@ Scenario: 2winner_game_2winner_quest
 
   And players "2, 4" won the game
 
-
+  And player 2 has 7 shields and 7 cards
+  And player 4 has 7 shields and 8 cards
 
 
 Scenario: 1winner_game_with_events
@@ -229,5 +235,41 @@ Scenario: 1winner_game_with_events
 
   And players "3" won the game
 
+  And player 3 has 7 shields and 9 cards
+  And player 2 has 5 shields and 8 cards
+  And player 4 has 4 shields and 11 cards
+  And player 1 has 0 shields and 12 cards
+
 
 Scenario: 0_winner_quest
+  Given the game starts with rigged deck for 0_winner_quest
+  And player 1 has hand "F10, F10, F25, F35, D5, D5, H10, B15, B15, L20, L20, E30"
+  And player 2 has hand "F5, F15, F15, F15, F25, S10, S10, S10, H10, H10, B15, L20"
+  And player 3 has hand "F5, F10, F15, F20, D5, D5, S10, H10, H10, H10, B15, B15"
+  And player 4 has hand "F5, F5, F20, F20, F35, D5, S10, S10, S10, S10, H10, E30"
+
+  When player 1 draws a quest of 2 stages
+  And player 1 is asked to sponsor and "accepts"
+  And player 1 builds the 2 stages as "[F10, B15, L20], [F35, D5, E30]"
+
+  And player 2 participates in stage 1
+  And player 3 participates in stage 1
+  And player 4 participates in stage 1
+  And player 2 draws "S10" and discards "F5"
+  And player 3 draws "H10" and discards "F15"
+  And player 4 draws "F40" and discards "S10"
+  And player 2 builds an attack "S10, H10, B15" for stage 1
+  And player 3 builds an attack "D5, S10" for stage 1
+  And player 4 builds an attack "E30" for stage 1
+
+  And player 2 loses stage 1 with hand as "F15, F15, F15, F25, S10, S10, S10, H10, L20" and 0 shields
+  And player 3 loses stage 1 with hand as "F5, F10, F20, D5, H10, H10, H10, H10, B15, B15" and 0 shields
+  And player 4 loses stage 1 with hand as "F5, F5, F20, F20, F35, F40, D5, S10, S10, S10, H10" and 0 shields
+
+  And Quest ends with no winners and player 1 discards all quest cards and draws 8 cards, then trims to 12 cards
+
+  And player 1 has 0 shields and 12 cards
+  And player 2 has 0 shields and 9 cards
+  And player 3 has 0 shields and 10 cards
+  And player 4 has 0 shields and 11 cards
+
