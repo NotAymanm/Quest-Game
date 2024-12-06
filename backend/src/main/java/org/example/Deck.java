@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Deck {
-    // Use a list to represent each card in the deck
+    // list to represent each card in the deck
     public List<AdventureCard> adventureDeck = new ArrayList<>();
     public List<EventCard> eventDeck = new ArrayList<>();
 
@@ -59,17 +59,15 @@ public class Deck {
         }
     }
 
-    public EventCard drawNextEventCard(PrintWriter output){
+    public EventCard drawNextEventCard(){
         if(eventDeck.isEmpty()){
             eventDeck.addAll(eventDiscardPile);
             eventDiscardPile.clear();
             Collections.shuffle(eventDeck);
         }
 
-        EventCard currentEvent = eventDeck.removeLast();
+        EventCard currentEvent = eventDeck.remove(eventDeck.size()-1);
         eventDiscardPile.add(currentEvent);
-
-        output.println("Event Card Drawn: " + currentEvent); output.flush();
 
         return currentEvent;
     }

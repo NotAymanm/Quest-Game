@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adventure Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="main-container">
+        <div id="main-game">
+            <h1>Welcome to Adventure Game</h1>
+            <div id="game-message"></div>
+            <div id="players-container"></div>
+            <div id="current-status">
+                <div id="current-turn"></div>
+                <div id="current-event"></div>
+                <div id="current-sponsor"></div>
+                <div id="current-stage"></div>
+            </div>
+            <h2 id="player-hand-id"></h2>
+            <div id="player-hand"></div>
+            <div id="status-info"></div>
+            <ul id="remaining-participants"></ul>
+            <div id="buttons">
+                <button id="dynamic-button" onclick="currentButtonAction()"><!-- updates dynamically --></button>
+                <!-- dynamically add and remove 'no' button -->
+            </div>
+        </div>
+        <button id="start-game">Start Game</button>
+    </div>
+    <div id="game-state"></div>
+    
+
+
+    <script src="script.js"></script>
+</body>
+
+</html>
