@@ -1,4 +1,4 @@
-1. Copy HTTPS url from Code or https://github.com/NotAymanm/A1-AymanMadani-101237658.git
+1. Copy HTTPS url from Code or https://github.com/NotAymanm/Quest-Game.git
 
 2. In IntelliJ > Projects, press the 'Get from VCS'
 
