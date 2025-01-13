@@ -1,4 +1,5 @@
-const apiBaseUrl = "http://localhost:8080";
+//const apiBaseUrl = "http://localhost:8080";
+const apiBaseUrl = import.meta.env.VITE_API_URL;
 window.test = null;
 
 const selectedCards = [];

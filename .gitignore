@@ -1,0 +1,21 @@
+# Ignore .env files
+.env
+
+# Ignore node_modules
+node_modules/
+
+target/
+
+# Ignore IDE configuration files
+.idea/
+
+# Ignore logs
+*.log
+
+# Ignore build directories
+/dist
+/build
+
+# Ignore operating system files
+.DS_Store
+Thumbs.db
