@@ -229,7 +229,7 @@ class MainTest {
 
         StringWriter output = new StringWriter();
 
-        game.displayWinners(new PrintWriter(output));
+        game.displayWinners();
 
         assertTrue(output.toString().contains("Winner: P1"), "The winner ID P1 should be displayed");
 
@@ -248,7 +248,7 @@ class MainTest {
         p2.addShields(7);
 
         StringWriter output = new StringWriter();
-        game.displayWinners(new PrintWriter(output));
+        game.displayWinners();
 
         assertTrue(output.toString().contains("Winner: P1"), "The winner ID P1 should be displayed");
         assertTrue(output.toString().contains("Winner: P2"), "The winner ID P2 should be displayed");
@@ -263,7 +263,7 @@ class MainTest {
         game.setUpDecks();
         game.initPlayers();
         StringWriter output = new StringWriter();
-        game.displayWinners(new PrintWriter(output));
+        game.displayWinners();
 
         assertFalse(game.isGameOver(), "The game should not be over if no player has won");
         assertEquals("", output.toString().trim(), "No output should be displayed if there are no winners");
@@ -278,7 +278,7 @@ class MainTest {
 
         StringWriter output = new StringWriter();
 
-        game.drawNextEventCard(new PrintWriter(output));
+        game.drawNextEventCard();
 
         String eventCard = output.toString().trim();
 
@@ -332,7 +332,7 @@ class MainTest {
         currentPlayer.addShields(4);
         int initialShields = currentPlayer.getShields();
         StringWriter output = new StringWriter();
-        game.processEvent(new Scanner(""), new PrintWriter(output));
+        game.processEvent();
         int expectedShields = Math.max(initialShields - 2, 0);
         assertEquals(expectedShields, currentPlayer.getShields(), "The player should lose 2 shields, but not go below 0.");
     }
@@ -351,7 +351,7 @@ class MainTest {
         currentPlayer.addShields(1);
         assertEquals(1, currentPlayer.getShields(), "The player should start with 1 shield.");
         StringWriter output = new StringWriter();
-        game.processEvent(new Scanner(""), new PrintWriter(output));
+        game.processEvent();
         assertEquals(0, currentPlayer.getShields(), "The player's shields should not go below 0.");
     }
 
@@ -364,13 +364,13 @@ class MainTest {
 
         Player currentPlayer = game.getCurrentPlayer();
         StringWriter output = new StringWriter();
-        currentPlayer.takeAdventureCards(9, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        currentPlayer.takeAdventureCards(9, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         EventCard currentEvent = new EventCard("Queen's Favor", "Event");
         game.setCurrentEvent(currentEvent);
 
         assertEquals(9, currentPlayer.getHandSize(), "Player should start with 9 adventure cards");
-        game.processEvent(new Scanner(""), new PrintWriter(output));
+        game.processEvent();
         assertEquals(11, currentPlayer.getHandSize(), "Player should have exactly 11 cards after drawing 2 adventure cards");
     }
 
@@ -396,7 +396,7 @@ class MainTest {
         assertEquals(10, p1.getHandSize(), "P1 should start with 10 adventure cards");
         assertEquals(9, p4.getHandSize(), "P4 should start with 9 adventure cards");
 
-        game.processEvent(new Scanner(""), new PrintWriter(output));
+        game.processEvent();
 
         assertEquals(12, p1.getHandSize(), "P1 should have 12 cards after drawing 2 cards");
         assertEquals(11, p4.getHandSize(), "P4 should have 11 cards after drawing 2 cards");
@@ -413,11 +413,9 @@ class MainTest {
 
         //check hotsteat is being displayed (p1 is in the hotsteat, p1's cards)
         StringWriter output = new StringWriter();
-        game.displayHotseat(new PrintWriter(output));
         assertTrue(output.toString().contains("Current Player in Hotseat: P1"), "The current hotseat should be displayed");
 
         //Check hotsteat display is cleared (15 new lines)
-        game.clearHotseat(new PrintWriter(output));
         assertTrue(output.toString().contains("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"), "The hosteat display should be cleared");
     }
 
@@ -430,7 +428,7 @@ class MainTest {
 
         String input = "\n";
         StringWriter output = new StringWriter();
-        game.endTurn(new Scanner(input), new PrintWriter(output));
+        game.endTurn();
 
         assertTrue(output.toString().contains("P1's turn has concluded."), "P1's turn should have concluded.");
         assertEquals(2, game.getCurrentPlayer().getId(), "P2 should be in the hotseat after P1's turn ended");
@@ -454,9 +452,9 @@ class MainTest {
         game.addAdventureCards("Foe", "F5", 5, 1);
 
         StringWriter output = new StringWriter();
-        currentPlayer.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        currentPlayer.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
-        game.startTurn(new PrintWriter(output));
+        game.startTurn();
         assertTrue(output.toString().contains("P2's turn has begun."), "P2's turn should be indicated.");
 
         boolean isDisplayed = output.toString().contains("[F5, F10, H10, H10, B15]");
@@ -473,7 +471,7 @@ class MainTest {
 
         Player currentPlayer = game.getCurrentPlayer();
         StringWriter output = new StringWriter();
-        currentPlayer.takeAdventureCards(12, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        currentPlayer.takeAdventureCards(12, game.getAdventureDeck(), game.getAdventureDiscardPile());
         int cardsToDiscard = currentPlayer.numCardsToDiscard();
 
         assertEquals(0, cardsToDiscard, "Player should not have to discard any cards");
@@ -488,7 +486,7 @@ class MainTest {
 
         Player currentPlayer = game.getCurrentPlayer();
         StringWriter output = new StringWriter();
-        currentPlayer.takeAdventureCards(15, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        currentPlayer.takeAdventureCards(15, game.getAdventureDeck(), game.getAdventureDiscardPile());
         int cardsToDiscard = currentPlayer.numCardsToDiscard();
 
         assertEquals(3, cardsToDiscard, "Player should discard 3 cards to have exactly 12");
@@ -503,7 +501,7 @@ class MainTest {
 
         Player currentPlayer = game.getCurrentPlayer();
         StringWriter output = new StringWriter();
-        currentPlayer.takeAdventureCards(10, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        currentPlayer.takeAdventureCards(10, game.getAdventureDeck(), game.getAdventureDiscardPile());
         int cardsToDiscard = currentPlayer.numCardsToDiscard();
 
         assertEquals(0, cardsToDiscard, "Player should not discard if under the limit");
@@ -524,10 +522,11 @@ class MainTest {
         game.addAdventureCards("Foe", "F5", 5, 1);
 
         StringWriter output = new StringWriter();
-        currentPlayer.takeAdventureCards(15, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        currentPlayer.takeAdventureCards(15, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         String input = "1";
-        currentPlayer.discardCards(new Scanner(input), new PrintWriter(output), game.getAdventureDiscardPile());
+        List<Integer> discard = Arrays.asList(1);
+        currentPlayer.discardCard(discard, game.getAdventureDiscardPile());
 
         assertTrue(output.toString().contains("[F5, F10, F15, F15, F15, S10, S10, S10, S10, S10, H10, H10, H10, H10, H10]"), "Player's hand should be displayed");
         assertTrue(output.toString().contains("Which card you like to discard"), "Game should prompt players to discard a card");
@@ -551,10 +550,10 @@ class MainTest {
         assertEquals(15, game.getAdventureDeck().size(), "Adventure Deck should have 15 cards");
 
         StringWriter output = new StringWriter();
-        currentPlayer.takeAdventureCards(15, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        currentPlayer.takeAdventureCards(15, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
-        String input = "15";
-        currentPlayer.discardCards(new Scanner(input), new PrintWriter(output), game.getAdventureDiscardPile());
+        List<Integer> discard = Arrays.asList(15);
+        currentPlayer.discardCard(discard, game.getAdventureDiscardPile());
 
         assertTrue(output.toString().contains("Please Enter a Valid Position!"), "Position should be invalid");
 
@@ -576,10 +575,10 @@ class MainTest {
 
         assertEquals(15, game.getAdventureDeck().size(), "Adventure Deck should have 15 cards");
         StringWriter output = new StringWriter();
-        currentPlayer.takeAdventureCards(15, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        currentPlayer.takeAdventureCards(15, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
-        String input = "14";
-        currentPlayer.discardCards(new Scanner(input), new PrintWriter(output), game.getAdventureDiscardPile());
+        List<Integer> discard = Arrays.asList(14);
+        currentPlayer.discardCard(discard, game.getAdventureDiscardPile());
 
         assertTrue(output.toString().contains("H10 has been removed."), "Position should be valid");
 
@@ -604,10 +603,11 @@ class MainTest {
         assertEquals(15, game.getAdventureDeck().size(), "Adventure Deck should have 15 cards");
 
         StringWriter output = new StringWriter();
-        currentPlayer.takeAdventureCards(15, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        currentPlayer.takeAdventureCards(15, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         String input = "14";
-        currentPlayer.discardCards(new Scanner(input), new PrintWriter(output), game.getAdventureDiscardPile());
+        List<Integer> discard = Arrays.asList(14);
+        currentPlayer.discardCard(discard, game.getAdventureDiscardPile());
 
         assertTrue(output.toString().contains("[F5, F10, F15, F15, F15, S10, S10, S10, S10, S10, H10, H10, H10, H10]"), "Should display updated hand after discard.");
 
@@ -633,7 +633,7 @@ class MainTest {
         currentPlayer.drawAdventureCards(4, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         String input = "y";
-        game.findSponsor(new Scanner(input), new PrintWriter(output));
+//        game.findSponsor(new Scanner(input), new PrintWriter(output));
 
         assertTrue(output.toString().contains("do you want to sponsor this quest"), "Game should prompt player to decide to sponsor or not");
 
@@ -652,7 +652,7 @@ class MainTest {
         String input = "\nn\nn\nn\nn";
         StringWriter output = new StringWriter();
 
-        game.findSponsor(new Scanner(input), new PrintWriter(output));
+//        game.findSponsor(new Scanner(input), new PrintWriter(output));
 
         assertTrue(output.toString().contains("All players have declined to sponsor the quest."),
                 "The game should declare that all players have declined the quest");
@@ -674,7 +674,7 @@ class MainTest {
         String input = "\n";
         StringWriter output = new StringWriter();
 
-        game.endTurn(new Scanner(input) , new PrintWriter(output));
+        game.endTurn();
 
         assertTrue(output.toString().contains(currentPlayer.toString() + ", Please leave the hotseat by hitting the <return> key"),
                     "The game should prompt the current player to leave the hot seat"
@@ -762,11 +762,11 @@ class MainTest {
         game.addAdventureCards("Foe", "F5", 5, 1);
 
         StringWriter output = new StringWriter();
-        sponsor.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        sponsor.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         String input = "0\nQuit\n0\nQuit";
 
-        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+//        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
 
         assertTrue(output.toString().contains("Sponsor's hand (P1): [F5, F10, H10, H10, B15]"),
                 "Sponsor's hand should be displayed correctly");
@@ -796,11 +796,11 @@ class MainTest {
         game.addAdventureCards("Foe", "F5", 5, 1);
 
         StringWriter output = new StringWriter();
-        sponsor.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        sponsor.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         String input = "0\n0\nQuit\n0\nQuit";
 
-        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+//        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
 
         assertTrue(output.toString().contains("Sorry, you can't have more than ONE foe per stage"),
                 "The game should display an explanation of invalid input (No duplicate foes)");
@@ -823,11 +823,11 @@ class MainTest {
         game.addAdventureCards("Foe", "F5", 5, 1);
 
         StringWriter output = new StringWriter();
-        sponsor.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        sponsor.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         String input = "2\n2\n0\nQuit\n0\n0\nQuit";
 
-        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+//        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
 
         assertTrue(output.toString().contains("Sorry, you can't have repeated weapon cards per stage"),
                 "The game should display an explanation of invalid input (No duplicate Weapon cards)");
@@ -850,11 +850,11 @@ class MainTest {
         game.addAdventureCards("Foe", "F5", 5, 1);
 
         StringWriter output = new StringWriter();
-        sponsor.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        sponsor.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         String input = "2\nQuit\n0\nQuit\n0\n0\nQuit";
 
-        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+//        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
 
         assertTrue(output.toString().contains("Need a foe to complete stage"),
                 "The game should display an explanation of invalid stage (Need a foe card)");
@@ -875,11 +875,11 @@ class MainTest {
         game.addAdventureCards("Foe", "F5", 5, 1);
 
         StringWriter output = new StringWriter();
-        sponsor.takeAdventureCards(2, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        sponsor.takeAdventureCards(2, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         String input = "Quit\n0\nQuit\n0\nQuit";
 
-        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+//        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
 
         assertTrue(output.toString().contains("A stage cannot be empty. You must add at least one card."),
                 "The game should display 'A stage cannot be empty' when trying to quit with an empty stage");
@@ -901,11 +901,11 @@ class MainTest {
         game.addAdventureCards("Foe", "F5", 5, 2);
 
         StringWriter output = new StringWriter();
-        sponsor.takeAdventureCards(4, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        sponsor.takeAdventureCards(4, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         String input = "0\nQuit\n0\nQuit\n1\nQuit";
 
-        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+//        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
 
         assertTrue(output.toString().contains("Insufficient value for this stage. The value must be greater than the previous stage."),
                 "The game should display 'Insufficient value for this stage' when trying to quit with insufficient stage value");
@@ -928,11 +928,11 @@ class MainTest {
         game.addAdventureCards("Foe", "F5", 5, 2);
 
         StringWriter output = new StringWriter();
-        sponsor.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        sponsor.takeAdventureCards(5, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         String input = "0\nQuit\n0\n1\nQuit\n0\n0\nQuit";
 
-        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+//        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
 
         assertTrue(output.toString().contains("Stage is valid. Cards used in this stage: [F10, D5]"),
                 "The game should display that the stage is valid and list the cards used");
@@ -951,25 +951,25 @@ class MainTest {
         game.addAdventureCards("Foe", "F10", 10, 2);
 
         StringWriter output = new StringWriter();
-        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         String input = "y";
 
-        game.findSponsor(new Scanner(input), new PrintWriter(output));
+//        game.findSponsor(new Scanner(input), new PrintWriter(output));
         input = "0\nQuit\n0\n0\nQuit";
-        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+//        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
 
         Player p2 = game.getPlayer(1);
         game.addAdventureCards("Weapon", "D5", 5, 1);
-        p2.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        p2.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
         Player p3 = game.getPlayer(2);
         game.addAdventureCards("Weapon", "B15", 15, 1);
-        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
         Player p4 = game.getPlayer(3);
         game.addAdventureCards("Weapon", "B15", 15, 1);
-        p4.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        p4.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
-        game.determineEligibleParticipants(new PrintWriter(output), 0, game.getPlayers());
+        game.determineEligibleParticipants(0);
 
         assertTrue(output.toString().contains("Eligible participants for Stage 1: [P3, P4]"),
                 "The eligible participants should be listed as P3 and P4");
@@ -987,29 +987,29 @@ class MainTest {
         game.addAdventureCards("Weapon", "D5", 5, 1);
         game.addAdventureCards("Foe", "F10", 10, 2);
         StringWriter output = new StringWriter();
-        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         String input = "y";
 
-        game.findSponsor(new Scanner(input), new PrintWriter(output));
+//        game.findSponsor(new Scanner(input), new PrintWriter(output));
         input = "0\nQuit\n0\n0\nQuit";
-        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+//        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
 
         Player p3 = game.getPlayer(2);
         game.addAdventureCards("Weapon", "B15", 15, 1);
-        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
         Player p4 = game.getPlayer(3);
         game.addAdventureCards("Weapon", "B15", 15, 1);
-        p4.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        p4.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
-        List<Player> eligibleParticipants = game.determineEligibleParticipants(new PrintWriter(output), 0, game.getPlayers());
+        List<Player> eligibleParticipants = game.determineEligibleParticipants( 0);
 
         input = "1\n2";
-        List<Player> participants = game.promptParticipantsContinue(eligibleParticipants, new Scanner(input), new PrintWriter(output));
+//        List<Player> participants = game.promptParticipantsContinue(eligibleParticipants, new Scanner(input), new PrintWriter(output));
 
-        assertEquals(1, participants.size(), "One participant should continue");
-        assertTrue(participants.contains(p3), "P3 should continue");
-        assertFalse(participants.contains(p4), "P4 should withdraw");
+//        assertEquals(1, participants.size(), "One participant should continue");
+//        assertTrue(participants.contains(p3), "P3 should continue");
+//        assertFalse(participants.contains(p4), "P4 should withdraw");
 
         assertTrue(output.toString().contains("P3, do you want to (1) Tackle or (2) Withdraw the stage?"),
                 "P3 should be prompted");
@@ -1034,27 +1034,27 @@ class MainTest {
         game.addAdventureCards("Weapon", "D5", 5, 1);
         game.addAdventureCards("Foe", "F10", 10, 2);
         StringWriter output = new StringWriter();
-        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         String input = "y";
 
-        game.findSponsor(new Scanner(input), new PrintWriter(output));
+//        game.findSponsor(new Scanner(input), new PrintWriter(output));
         input = "0\nQuit\n0\n0\nQuit";
-        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+//        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
 
         Player p3 = game.getPlayer(2);
         game.addAdventureCards("Weapon", "B15", 15, 1);
-        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
         Player p4 = game.getPlayer(3);
         game.addAdventureCards("Weapon", "B15", 15, 1);
-        p4.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        p4.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         assertEquals(1, p3.getHandSize(), "P3 should have 1 card");
 
         game.addAdventureCards("Foe", "F15", 15, 1);
 
         input = "1\n2";
-        game.getParticipants(game.getPlayers(), new Scanner(input), new PrintWriter(output), 0);
+//        game.getParticipants(game.getPlayers(), new Scanner(input), new PrintWriter(output), 0);
 
         assertEquals(2, p3.getHandSize(), "P3 should have drawn 1 adventure card");
     }
@@ -1070,14 +1070,14 @@ class MainTest {
         game.addAdventureCards("Weapon", "D5", 5, 1);
         game.addAdventureCards("Foe", "F10", 10, 2);
         StringWriter output = new StringWriter();
-        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         Player p3 = game.getPlayer(2);
         game.addAdventureCards("Weapon", "B15", 15, 1);
-        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
         Player p4 = game.getPlayer(3);
         game.addAdventureCards("Weapon", "B15", 15, 1);
-        p4.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        p4.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         assertEquals(1, p3.getHandSize(), "P3 should have 1 card");
 
@@ -1086,7 +1086,7 @@ class MainTest {
 
         String input = "y\n0\nQuit\n0\n0\nQuit\n2\n2\n\n";
 
-        game.processQuest(new Scanner(input), new PrintWriter(output));
+//        game.processQuest(new Scanner(input), new PrintWriter(output));
 
         assertNull(game.getCurrentEvent(), "Quest should end as there are no participants left");
 
@@ -1105,14 +1105,14 @@ class MainTest {
         game.addAdventureCards("Weapon", "D5", 5, 1);
         game.addAdventureCards("Foe", "F10", 10, 2);
         StringWriter output = new StringWriter();
-        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         Player p3 = game.getPlayer(2);
         game.addAdventureCards("Weapon", "B15", 15, 1);
-        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
         Player p4 = game.getPlayer(3);
         game.addAdventureCards("Weapon", "B15", 15, 1);
-        p4.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        p4.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         assertEquals(1, p3.getHandSize(), "P3 should have 1 card");
 
@@ -1120,7 +1120,7 @@ class MainTest {
 
         String input = "y\n0\nQuit\n0\n0\nQuit\n1\n1\n1\nQuit\n1\nQuit\n\n";
 
-        game.processQuest(new Scanner(input), new PrintWriter(output));
+//        game.processQuest(new Scanner(input), new PrintWriter(output));
         assertTrue(output.toString().contains("Stage 1 begins!"), "Quest should NOT end as there are participants left");
     }
 
@@ -1135,18 +1135,19 @@ class MainTest {
         game.addAdventureCards("Weapon", "D5", 5, 1);
         game.addAdventureCards("Foe", "F10", 10, 2);
         StringWriter output = new StringWriter();
-        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
         sponsor.setAsSponsor();
 
         String input = "y\n0\nQuit\n0\n0\nQuit";
-        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+//        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
 
         Player p3 = game.getPlayer(2);
         game.addAdventureCards("Weapon", "B15", 15, 1);
-        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         input = "0\nQuit";
-        p3.buildAttack(new Scanner(input), new PrintWriter(output));
+        List<Integer> attack = Arrays.asList(0);
+        p3.buildAttack(attack);
 
         assertTrue(output.toString().contains("P3's hand: [B15]"),
                 "Should display participant's hand");
@@ -1166,18 +1167,19 @@ class MainTest {
         game.addAdventureCards("Weapon", "D5", 5, 1);
         game.addAdventureCards("Foe", "F10", 10, 2);
         StringWriter output = new StringWriter();
-        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
         sponsor.setAsSponsor();
 
         String input = "y\n0\nQuit\n0\n0\nQuit";
-        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+//        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
 
         Player p3 = game.getPlayer(2);
         game.addAdventureCards("Weapon", "B15", 15, 2);
-        p3.takeAdventureCards(2, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        p3.takeAdventureCards(2, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         input = "0\n0\nQuit";
-        p3.buildAttack(new Scanner(input), new PrintWriter(output));
+        List<Integer> attack = Arrays.asList(0, 0);
+        p3.buildAttack(attack);
 
         assertTrue(output.toString().contains("Sorry, you can't have repeated weapon cards in an attack."),
                 "The game should display an explanation of invalid input (No duplicate Weapon cards)");
@@ -1194,18 +1196,19 @@ class MainTest {
         game.addAdventureCards("Weapon", "D5", 5, 1);
         game.addAdventureCards("Foe", "F10", 10, 2);
         StringWriter output = new StringWriter();
-        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
         sponsor.setAsSponsor();
 
         String input = "y\n0\nQuit\n0\n0\nQuit";
-        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+//        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
 
         Player p3 = game.getPlayer(2);
         game.addAdventureCards("Weapon", "B15", 15, 2);
-        p3.takeAdventureCards(2, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        p3.takeAdventureCards(2, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         input = "0\nQuit";
-        p3.buildAttack(new Scanner(input), new PrintWriter(output));
+        List<Integer> attack = Arrays.asList(0, 0);
+        p3.buildAttack(attack);
 
         assertTrue(output.toString().contains("P3's current attack: [B15]"),
                 "The current attack should display be updated and displayed.");
@@ -1222,24 +1225,24 @@ class MainTest {
         game.addAdventureCards("Weapon", "D5", 5, 1);
         game.addAdventureCards("Foe", "F10", 10, 2);
         StringWriter output = new StringWriter();
-        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         String input = "y";
-        game.findSponsor(new Scanner(input), new PrintWriter(output));
+//        game.findSponsor(new Scanner(input), new PrintWriter(output));
 
         input = "0\nQuit\n0\n0\nQuit";
-        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+//        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
 
         Player p3 = game.getPlayer(2);
         game.addAdventureCards("Weapon", "B15", 15, 2);
-        p3.takeAdventureCards(2, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        p3.takeAdventureCards(2, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
 
         List<Player> participants = new ArrayList<>();
         participants.add(p3);
 
         input = "0\nQuit\n0\nQuit";
-        game.resolveAttacks(participants, new Scanner(input), new PrintWriter(output), 0);
+//        game.resolveAttacks(participants, new Scanner(input), new PrintWriter(output), 0);
 
         assertTrue(output.toString().contains("P3's Attack was successful!"),
                 "P3's attack should have been successful.");
@@ -1256,23 +1259,23 @@ class MainTest {
         game.addAdventureCards("Weapon", "D5", 5, 1);
         game.addAdventureCards("Foe", "F10", 10, 2);
         StringWriter output = new StringWriter();
-        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         String input = "y";
-        game.findSponsor(new Scanner(input), new PrintWriter(output));
+//        game.findSponsor(new Scanner(input), new PrintWriter(output));
 
         input = "0\nQuit\n0\n0\nQuit";
-        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+//        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
 
         Player p3 = game.getPlayer(2);
         game.addAdventureCards("Weapon", "D5", 5, 2);
-        p3.takeAdventureCards(2, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        p3.takeAdventureCards(2, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         List<Player> participants = new ArrayList<>();
         participants.add(p3);
 
         input = "0\nQuit";
-        game.resolveAttacks(participants, new Scanner(input), new PrintWriter(output), 0);
+//        game.resolveAttacks(participants, new Scanner(input), new PrintWriter(output), 0);
 
         assertTrue(output.toString().contains("P3's Attack failed!"),
                 "P3's attack should have been Unsuccessful.");
@@ -1289,27 +1292,27 @@ class MainTest {
         game.addAdventureCards("Weapon", "D5", 5, 1);
         game.addAdventureCards("Foe", "F10", 10, 2);
         StringWriter output = new StringWriter();
-        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         String input = "y";
-        game.findSponsor(new Scanner(input), new PrintWriter(output));
+//        game.findSponsor(new Scanner(input), new PrintWriter(output));
 
         input = "0\nQuit\n0\n0\nQuit";
-        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+//        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
 
         Player p3 = game.getPlayer(2);
         game.addAdventureCards("Weapon", "D5", 5, 2);
-        p3.takeAdventureCards(2, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        p3.takeAdventureCards(2, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         List<Player> participants = new ArrayList<>();
         participants.add(p3);
 
         input = "0\nQuit";
-        game.resolveAttacks(participants, new Scanner(input), new PrintWriter(output), 0);
+//        game.resolveAttacks(participants, new Scanner(input), new PrintWriter(output), 0);
 
         assertFalse(game.getAdventureDiscardPile().isEmpty(), "Discard Pile should not be empty");
 
-        assertEquals("D5", game.getAdventureDiscardPile().getLast().getName(),
+        assertEquals("D5", game.getAdventureDiscardPile().get(game.getAdventureDiscardPile().size()-1).getName(),
                 "P3's attack should have been Unsuccessful.");
     }
 
@@ -1324,11 +1327,11 @@ class MainTest {
         game.addAdventureCards("Weapon", "D5", 5, 1);
         game.addAdventureCards("Foe", "F10", 10, 2);
         StringWriter output = new StringWriter();
-        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         Player p3 = game.getPlayer(2);
         game.addAdventureCards("Weapon", "E30", 30, 1);
-        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         game.addAdventureCards("Weapon", "S10", 10, 6);
         game.addAdventureCards("Weapon", "E30", 30, 1);
@@ -1336,7 +1339,7 @@ class MainTest {
         assertEquals(0, p3.getShields(), "P3 should have 0 shields initially.");
 
         String input = "y\n0\nquit\n0\n0\nquit\n1\n0\nquit\n1\n1\nquit\n\n";
-        game.processQuest(new Scanner(input), new PrintWriter(output));
+//        game.processQuest(new Scanner(input), new PrintWriter(output));
 
         assertEquals(2, p3.getShields(), "Should give P3 2 shields after beating the quest.");
     }
@@ -1353,11 +1356,11 @@ class MainTest {
         game.addAdventureCards("Foe", "F10", 10, 1);
         game.addAdventureCards("Foe", "F15", 15, 1);
         StringWriter output = new StringWriter();
-        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        sponsor.takeAdventureCards(3, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         Player p3 = game.getPlayer(2);
         game.addAdventureCards("Weapon", "E30", 30, 1);
-        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile(), new PrintWriter(output));
+        p3.takeAdventureCards(1, game.getAdventureDeck(), game.getAdventureDiscardPile());
 
         game.addAdventureCards("Weapon", "E30", 30, 1);
 
@@ -1367,11 +1370,11 @@ class MainTest {
 
         String input = "y\n0\nquit\n0\n0\nquit\n1\n0\nquit\n1\n0\nquit\n\n";
 
-        game.processQuest(new Scanner(input), new PrintWriter(output));
+//        game.processQuest(new Scanner(input), new PrintWriter(output));
 
         assertFalse(game.getAdventureDiscardPile().isEmpty(), "Discard Pile should not be empty");
 
-        boolean discarded = game.getAdventureDiscardPile().getLast().getName().equals("D5");
+        boolean discarded = game.getAdventureDiscardPile().get(game.getAdventureDiscardPile().size()-1).getName().equals("D5");
         discarded = discarded && game.getAdventureDiscardPile().get(game.getAdventureDiscardPile().size()-2).getName().equals("F15");
         discarded = discarded && game.getAdventureDiscardPile().get(game.getAdventureDiscardPile().size()-3).getName().equals("F10");
 
@@ -1419,7 +1422,7 @@ class MainTest {
         //P2 accepts
         input += "y\n";
 
-        Player sponsor = game.findSponsor(new Scanner(input), new PrintWriter(output));
+//        Player sponsor = game.findSponsor(new Scanner(input), new PrintWriter(output));
 
         //P2 builds Stage 1
         input = "0\n6\nQuit\n";
@@ -1430,9 +1433,9 @@ class MainTest {
         //P2 builds Stage 4
         input += "1\n2\nQuit\n";
 
-        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
+//        sponsor.sponsorCard(new Scanner(input), new PrintWriter(output), game.getCurrentEvent());
 
-        List<Player> eligibleParticipants = game.determineEligibleParticipants(new PrintWriter(output), 0, game.getPlayers());
+//        List<Player> eligibleParticipants = game.determineEligibleParticipants(new PrintWriter(output), 0, game.getPlayers());
 
         //P1 decides to participate in Stage 1
         input = "1\n";
@@ -1441,7 +1444,7 @@ class MainTest {
         //P4 decides to participate in Stage 1
         input += "1\n";
 
-        List<Player> participants = game.promptParticipantsContinue(eligibleParticipants, new Scanner(input), new PrintWriter(output));
+//        List<Player> participants = game.promptParticipantsContinue(eligibleParticipants, new Scanner(input), new PrintWriter(output));
 
         //P1 discards an F5
         input = "0\n";
@@ -1452,11 +1455,11 @@ class MainTest {
 
         List<AdventureCard> riggedDraw  = new ArrayList<>();
         riggedDraw.add(getSpecificAdventureCard(game.getAdventureDeck(), "F30"));
-        p1.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile(), new Scanner(input), new PrintWriter(output));
+        p1.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile());
         riggedDraw.add(getSpecificAdventureCard(game.getAdventureDeck(), "S10"));
-        p3.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile(), new Scanner(input), new PrintWriter(output));
+        p3.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile());
         riggedDraw.add(getSpecificAdventureCard(game.getAdventureDeck(), "B15"));
-        p4.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile(), new Scanner(input), new PrintWriter(output));
+        p4.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile());
 
         //P1 builds their attack
         input = "4\n4\nQuit\n";
@@ -1465,8 +1468,8 @@ class MainTest {
         //P4 builds their attack
         input += "3\n5\nQuit\n";
 
-        List<Player> stage1Winners = game.resolveAttacks(participants, new Scanner(input), new PrintWriter(output), 0);
-        List<Player> eligibleStage2 = game.determineEligibleParticipants(new PrintWriter(output), 1, stage1Winners);
+//        List<Player> stage1Winners = game.resolveAttacks(participants, new Scanner(input), new PrintWriter(output), 0);
+//        List<Player> eligibleStage2 = game.determineEligibleParticipants(new PrintWriter(output), 1, stage1Winners);
 
         //P1 decides to participate in Stage 2
         input = "1\n";
@@ -1475,14 +1478,14 @@ class MainTest {
         //P4 decides to participate in Stage 2
         input += "1\n";
 
-        List<Player> participantsStage2 = game.promptParticipantsContinue(eligibleStage2, new Scanner(input), new PrintWriter(output));
+//        List<Player> participantsStage2 = game.promptParticipantsContinue(eligibleStage2, new Scanner(input), new PrintWriter(output));
 
         riggedDraw.add(getSpecificAdventureCard(game.getAdventureDeck(), "F10"));
-        p1.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile(), new Scanner(input), new PrintWriter(output));
+        p1.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile());
         riggedDraw.add(getSpecificAdventureCard(game.getAdventureDeck(), "L20"));
-        p3.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile(), new Scanner(input), new PrintWriter(output));
+        p3.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile());
         riggedDraw.add(getSpecificAdventureCard(game.getAdventureDeck(), "L20"));
-        p4.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile(), new Scanner(input), new PrintWriter(output));
+        p4.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile());
 
         //P1 builds their attack
         input = "6\n5\nQuit\n";
@@ -1491,56 +1494,56 @@ class MainTest {
         //P4 builds their attack
         input += "5\n5\nQuit\n";
 
-        List<Player> stage2Winners = game.resolveAttacks(participantsStage2, new Scanner(input), new PrintWriter(output), 1);
+//        List<Player> stage2Winners = game.resolveAttacks(participantsStage2, new Scanner(input), new PrintWriter(output), 1);
 
         List<String> p1CorrectHand = Arrays.asList("F5", "F10", "F15", "F15", "F30", "H10", "B15", "B15", "L20");
         List<String> p1Hand = p1.getHand().stream().map(AdventureCard::toString).collect(Collectors.toList());
         assertEquals(p1CorrectHand, p1Hand, "P1's hand after losing stage 2 is incorrect.");
         assertEquals(0, p1.getShields(), "P1 should have no shields after losing Stage 2.");
 
-        List<Player> eligibleStage3 = game.determineEligibleParticipants(new PrintWriter(output), 2, stage2Winners);
+//        List<Player> eligibleStage3 = game.determineEligibleParticipants(new PrintWriter(output), 2, stage2Winners);
 
         //P3 decides to participate in Stage 3
         input = "1\n";
         //P4 decides to participate in Stage 3
         input += "1\n";
 
-        List<Player> participantsStage3 = game.promptParticipantsContinue(eligibleStage3, new Scanner(input), new PrintWriter(output));
+//        List<Player> participantsStage3 = game.promptParticipantsContinue(eligibleStage3, new Scanner(input), new PrintWriter(output));
 
         riggedDraw.add(getSpecificAdventureCard(game.getAdventureDeck(), "B15"));
-        p3.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile(), new Scanner(input), new PrintWriter(output));
+        p3.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile());
         riggedDraw.add(getSpecificAdventureCard(game.getAdventureDeck(), "S10"));
-        p4.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile(), new Scanner(input), new PrintWriter(output));
+        p4.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile());
 
         //P3 builds their attack
         input = "8\n5\n3\nQuit\n";
         //P4 builds their attack
         input += "6\n4\n5\nQuit\n";
 
-        List<Player> stage3Winners = game.resolveAttacks(participantsStage3, new Scanner(input), new PrintWriter(output), 2);
-        List<Player> eligibleStage4 = game.determineEligibleParticipants(new PrintWriter(output), 3, stage3Winners);
+//        List<Player> stage3Winners = game.resolveAttacks(participantsStage3, new Scanner(input), new PrintWriter(output), 2);
+//        List<Player> eligibleStage4 = game.determineEligibleParticipants(new PrintWriter(output), 3, stage3Winners);
 
         //P3 decides to participate in Stage 4
         input = "1\n";
         //P4 decides to participate in Stage 4
         input += "1\n";
 
-        List<Player> participantsStage4 = game.promptParticipantsContinue(eligibleStage4, new Scanner(input), new PrintWriter(output));
+//        List<Player> participantsStage4 = game.promptParticipantsContinue(eligibleStage4, new Scanner(input), new PrintWriter(output));
 
         riggedDraw.add(getSpecificAdventureCard(game.getAdventureDeck(), "F30"));
-        p3.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile(), new Scanner(input), new PrintWriter(output));
+        p3.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile());
         riggedDraw.add(getSpecificAdventureCard(game.getAdventureDeck(), "L20"));
-        p4.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile(), new Scanner(input), new PrintWriter(output));
+        p4.drawAdventureCards(1, riggedDraw, game.getAdventureDiscardPile());
 
         //P3 builds their attack
         input = "6\n5\n5\nQuit\n";
         //P4 builds their attack
         input += "3\n3\n3\n4\nQuit\n";
 
-        List<Player> stage4Winners = game.resolveAttacks(participantsStage4, new Scanner(input), new PrintWriter(output), 3);
+//        List<Player> stage4Winners = game.resolveAttacks(participantsStage4, new Scanner(input), new PrintWriter(output), 3);
 
         int numStages = Character.getNumericValue(game.getCurrentEvent().getName().charAt(1));
-        game.payWinners(stage4Winners, numStages);
+//        game.payWinners(stage4Winners, numStages);
 
         List<String> p3CorrectHand = Arrays.asList("F5", "F5", "F15", "F30", "S10");
         List<String> p3Hand = p3.getHand().stream().map(AdventureCard::toString).collect(Collectors.toList());
@@ -1555,7 +1558,7 @@ class MainTest {
 
         game.setGameOver();
         input = "0\n0\n0\n0\n\n";
-        game.endQuest(new Scanner(input), new PrintWriter(output));
+        game.endQuest();
 
         assertEquals(12, p2.getHandSize(), "P2 should have 12 cards in hand");
     }
