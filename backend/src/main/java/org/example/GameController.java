@@ -188,6 +188,11 @@ public class GameController {
         return game.displayWinners();
     }
 
+    @GetMapping("/health")
+    public String healthCheck(){
+        return "OK";
+    }
+
 }
 
 
