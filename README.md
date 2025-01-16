@@ -1,4 +1,4 @@
-# Quest Game
+# 📂 Quest Game
 
 Welcome to the **Quest Game** repository! This project features a Java-based backend application for an exciting and interactive adventure card game.
 
@@ -14,7 +14,7 @@ Welcome to the **Quest Game** repository! This project features a Java-based bac
 
 ---
 
-## 📝 About the Project
+## 💡 About the Project
 
 The Quest Game is a backend application designed to manage an engaging card-based adventure game. With a robust Java backend, it provides a foundation for gameplay mechanics, deck management, and game logic.
 
