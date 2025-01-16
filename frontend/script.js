@@ -2,26 +2,27 @@ console.log('script.js loaded');
 const apiBaseUrl = window.apiBaseUrl;
 window.test = null;
 
-const selectedCards = [];
-let currentStage = 0;
-let numStages = 0;
-let playerId = -1;
+// Attached necessary functions and variables to the window object
+window.selectedCards = [];
+window.currentStage = 0;
+window.numStages = 0;
+window.playerId = -1;
 
-let promptPlayerIndex = 0;
-let eligiblePlayers = []; // Will be populated dynamically from the backend
+window.promptPlayerIndex = 0;
+window.eligiblePlayers = []; // Will be populated dynamically from the backend
 
-let currentTurnId = 1;
-let currentSponsor = null;
+window.currentTurnId = 1;
+window.currentSponsor = null;
 
+window.currentButtonAction = () => {};
 
 // Get the button element by its ID
 const dynamicButton = document.getElementById('dynamic-button');
 const message = document.getElementById('game-message');
-let currentButtonAction = () => {};
 
 
 // ***************** GETTER FUNCTIONS ***********************
-async function getHand(playerId) {
+window.getHand = async function(playerId) {
     try {
         const response = await fetch(`${apiBaseUrl}/game/playerHand?playerId=${playerId}`, {
             method: 'GET',
@@ -35,7 +36,7 @@ async function getHand(playerId) {
     }
 }
 
-async function getShields(playerId) {
+window.getShields = async function(playerId) {
     try {
         const response = await fetch(`${apiBaseUrl}/game/playerShields?playerId=${playerId}`, {
             method: 'GET',
@@ -49,9 +50,9 @@ async function getShields(playerId) {
     }
 }
 
-// ***************** FUNCTIONAL METHODS *********************
+// *getHand****** FUNCTIONAL METHODS *********************
 // Display the player's hand as clickable cards
-function displayHand(hand, playerId, canClick) {
+window.displayHand = function(hand, playerId, canClick) {
     const handContainer = document.getElementById("player-hand");
     handContainer.innerHTML = '';
     
@@ -69,7 +70,7 @@ function displayHand(hand, playerId, canClick) {
     updateState();
 }
 
-function initGameState(){
+window.initGameState = function() {
     const gameState = document.getElementById('game-state');
     gameState.style.display = "flex";
 
@@ -107,7 +108,7 @@ function initGameState(){
 
 }
 
-async function updateState(){
+window.updateState = async function() {
     const players = document.querySelectorAll('.player');
     
     players.forEach(async (player, index) => {
@@ -129,19 +130,19 @@ async function updateState(){
 }
 
 // Displays Current Event
-function displayEvent(event) {
+window.displayEvent = function(event) {
     const eventContainer = document.getElementById("current-event");
     eventContainer.innerHTML = `${event.type}, ${event.name}`;
 }
 
 // Display current player turn
-function displayTurn() {
+window.displayTurn = function() {
     const turnDiv = document.getElementById('current-turn');
     turnDiv.innerHTML = `Current Turn: Player ${currentTurnId}`;
 }
 
 // Toggle card selection when clicked
-function toggleCardSelection(index, cardDiv) {
+window.toggleCardSelection = function(index, cardDiv) {
     if (selectedCards.includes(index)) {
         selectedCards.splice(selectedCards.indexOf(index), 1);
         cardDiv.classList.remove("selected");
@@ -154,7 +155,7 @@ function toggleCardSelection(index, cardDiv) {
 }
 
 // display status
-function updateStatus(message, color) {
+window.updateStatus = function(message, color) {
     const stageInfo = document.getElementById("status-info");
     stageInfo.style.color = color;
     stageInfo.textContent = message;
@@ -168,7 +169,7 @@ function updateStatus(message, color) {
 }
 
 //Display sponsor
-function updateSponsor(){
+window.updateSponsor = function() {
     const sponsorDiv = document.getElementById('current-sponsor');
     
     if(currentSponsor) {
@@ -183,7 +184,7 @@ function updateSponsor(){
 }
 
 // Display stages
-function updateStage(){
+window.updateStage = function() {
     const stageDiv = document.getElementById('current-stage');
     
     if(currentSponsor) {
@@ -197,7 +198,7 @@ function updateStage(){
 }
 
 // ********** STARTING THE GAME *************
-async function initGame() {
+window.initGame = async function() {
     try {
         const response = await fetch(`${apiBaseUrl}/game/initGame?test=${window.test}`, { method: 'POST' });
         const result = await response.text();
@@ -215,7 +216,7 @@ async function initGame() {
     }
 }
 
-async function startGame() {
+window.startGame = async function() {
     try {
         const response = await fetch(`${apiBaseUrl}/game/drawEvent`, { method: 'POST' });
         const event = await response.json();
@@ -238,7 +239,7 @@ async function startGame() {
     }
 }
 
-async function gameOver() {
+window.gameOver = async function() {
     try{
         const response = await fetch(`${apiBaseUrl}/game/displayWinners`, {method : 'POST'});
         const winners = await response.json();
@@ -262,7 +263,7 @@ async function gameOver() {
     }
 }
 
-async function nextTurn() {
+window.nextTurn = async function() {
     try {
         const response = await fetch(`${apiBaseUrl}/game/nextTurn`, { method: 'POST', headers: { 'Content-Type': 'application/json' } })
         const result = await response.json();
@@ -286,7 +287,7 @@ async function nextTurn() {
     }
 }
 
-async function endTurn(plus = false) {
+window.endTurn = async function(plus = false) {
     await checkForCardDiscard();
 
     displayHand(await getHand(currentTurnId), currentTurnId, false);
@@ -307,7 +308,7 @@ async function endTurn(plus = false) {
     currentButtonAction = nextTurn;
 }
 
-async function checkForCardDiscard(display = false) {
+window.checkForCardDiscard = async function(display = false) {
     try {
         const response = await fetch(`${apiBaseUrl}/game/checkForDiscard`, { method: 'POST' });
         const playersNeedsDiscardArray  = await response.json();
@@ -336,7 +337,7 @@ async function checkForCardDiscard(display = false) {
 }
 
 // A function that returns a Promise which resolves when the discard action is triggered
-function waitForDiscardAction(tempPlayerId) {
+window.waitForDiscardAction = function(tempPlayerId) {
     return new Promise((resolve) => {
         // Directly resolve the promise once the button action is called
         currentButtonAction = async () => {
@@ -346,7 +347,7 @@ function waitForDiscardAction(tempPlayerId) {
     });
 }
 
-async function discardCards(playerId) {
+window.discardCards = async function(playerId) {
     try {
         const response = await fetch(`${apiBaseUrl}/game/discardCards?playerId=${playerId}`, {
             method: 'POST',
@@ -369,7 +370,7 @@ async function discardCards(playerId) {
 }
 
 // ********** PROCESS EVENT **********************
-async function processEvent() {
+window.processEvent = async function() {
     try {
         const response = await fetch(`${apiBaseUrl}/game/processEvent`, { method: 'POST' });
         const eventOutcome = await response.json();
@@ -394,7 +395,7 @@ async function processEvent() {
 }
 
 // ************ HANDLING SPONSOR QUEST ************
-async function getEligibleSponsors() {
+window.getEligibleSponsors = async function() {
     try {
         const response = await fetch(`${apiBaseUrl}/game/determineEligibleSponsors`, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
         const players = await response.json();
@@ -410,7 +411,7 @@ async function getEligibleSponsors() {
     }
 }
 
-async function promptNextSponsor(player) {
+window.promptNextSponsor = async function(player) {
 
     if (promptPlayerIndex >= eligiblePlayers.length) {
         console.log('All players have been prompted');
@@ -447,7 +448,7 @@ async function promptNextSponsor(player) {
 
 
 // Function to handle the decision for the current player
-async function handleSponsorDecision(decision) {
+window.handleSponsorDecision = async function(decision) {
 
     try {
         const response = await fetch(`${apiBaseUrl}/game/promptNextSponsor`, {
@@ -490,7 +491,7 @@ async function handleSponsorDecision(decision) {
 
 // ********** HANDLING QUEST BUILDING *************
 // get the quest and numStages from the backend
-async function getQuest() {
+window.getQuest = async function() {
     try {
         const response = await fetch(`${apiBaseUrl}/game/getQuest`, {
             method: 'POST',
@@ -508,7 +509,7 @@ async function getQuest() {
 
 
 
-async function startStageBuilding(stages, player) {
+window.startStageBuilding = async function(stages, player) {
     numStages = stages;  // Set numStages dynamically
     playerId = player; // Set player dynamically
     currentStage = 0;  // Reset the stage counter
@@ -524,7 +525,7 @@ async function startStageBuilding(stages, player) {
 }
 
 // Finish stage and send selected cards to backend
-async function finishStageBuilding() {
+window.finishStageBuilding = async function() {
     try {
         const response = await fetch(`${apiBaseUrl}/game/buildStage?playerId=${playerId}&stageNumber=${currentStage}`, {
             method: 'POST',
@@ -561,7 +562,7 @@ async function finishStageBuilding() {
 }
 
 // ********** HANDLING PARTICIPANTS *************
-async function getEligibleParticipants() {
+window.getEligibleParticipants = async function() {
     try {
         const response = await fetch(`${apiBaseUrl}/game/determineEligibleParticipants`, {
             method: 'POST',
@@ -579,7 +580,7 @@ async function getEligibleParticipants() {
     }
 }
 
-async function promptNextParticipant(player) {
+window.promptNextParticipant = async function(player) {
 
     if (promptPlayerIndex >= eligiblePlayers.length) {
         console.log('All players have been prompted');
@@ -610,7 +611,7 @@ async function promptNextParticipant(player) {
 }
 
 // Function to handle the decision for the current player
-async function handleParticipantDecision(decision) {
+window.handleParticipantDecision = async function(decision) {
     try {
         // Send the decision for the current player to the backend
         const response = await fetch(`${apiBaseUrl}/game/promptNextParticipant`, {
@@ -643,7 +644,7 @@ async function handleParticipantDecision(decision) {
     }
 }
 
-async function participantsDraw() {
+window.participantsDraw = async function() {
     try {
         const response = await fetch(`${apiBaseUrl}/game/participantsDraw`, {
             method: 'POST',
@@ -682,7 +683,7 @@ async function participantsDraw() {
 }
 
 // ************ HANDLE ATTACK ****************
-async function resolveAttack() {
+window.resolveAttack = async function() {
     try{
         // Send attack data to the backend
         const response = await fetch(`${apiBaseUrl}/game/resolveAttacks?stage=${currentStage}&playerIndex=${promptPlayerIndex}`, {
@@ -746,7 +747,7 @@ async function resolveAttack() {
 
 }
 
-async function payWinners() {
+window.payWinners = async function() {
     try{
         const response = await fetch(`${apiBaseUrl}/game/payWinners?numStages=${numStages}`, {method: 'POST'});
         const result = await response.json();
@@ -771,7 +772,7 @@ async function payWinners() {
     }
 }
 
-async function endQuest() {
+window.endQuest = async function() {
     try{
         const response = await fetch(`${apiBaseUrl}/game/endQuest`, {method: 'POST'});
         await endTurn(true);
