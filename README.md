@@ -59,7 +59,23 @@ Open a new terminal to run frontend:
 cd frontend
 npx http-server
 ```
-Access the application at `http://localhost:8080`.
+### Configuring the Frontend
+
+To ensure the frontend correctly communicates with the local backend, you'll need to update the `frontend/script.js` file:
+
+1. **Uncomment** the line that sets the `apiBaseUrl` to your local backend URL:
+
+   ```javascript
+   const apiBaseUrl = "http://localhost:8080";
+   ```
+
+2. **Comment out** the line that refers to the environment variable:
+
+   ```javascript
+   // const apiBaseUrl = import.meta.env.VITE_API_URL;
+   ```
+
+After making these changes, you can access the application by visiting `http://localhost:8080` in your browser.
 
 ---
 
