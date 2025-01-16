@@ -3,6 +3,6 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   root: './',
   server: {
-    port: 8080,
+    port: 3000,
   },
 });
